@@ -28,3 +28,18 @@ if ($row['Actual']==1)
 $doc =  '<div align="center" id="app_1"></div><script>selector = "#app_1"; component = "sudos"; readonly = 0; formats = ".pdf";url123 = "//192.168.202.103/seaport***_new/doc_upload.php"; newVue(selector, component, readonly, url123, formats,'.$ID.');</script>';
 else $doc =  '<div align="center" id="app_1"></div><script>selector = "#app_1"; component = "sudos"; readonly = 1; formats = ".pdf";url123 = "//192.168.202.103/seaport***_new/doc_upload.php"; newVue(selector, component, readonly, url123, formats,'.$ID.');</script>';
 </code>
+
+<h2>Basic usage</h2>
+<pre>
+//  > USAGE 4demo => 	 <div align="center" id="app_1"></div> 
+/*let
+       selector = "#app_1",
+       component = "sudozahod",
+       readonly = 0,
+       url = "//192.168.202.103/seaport_new/doc_upload.php",
+       formats = ".pdf",
+       EntID = 123456;
+       newVue(selector, component, readonly, url, formats, EntID);
+       newVue("#app_2", "sudozahod", 1, url, formats, EntID);
+ */
+</pre>
