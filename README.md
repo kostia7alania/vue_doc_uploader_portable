@@ -6,6 +6,7 @@
 <h1>USAGE:</h1>
 <h4>HTML <head></h4>
 <code>
+<pre>
 <!-- VUE -->
 <link 	href="./js/uploader/portable/css/style.css" 						type="text/css" rel="stylesheet"/>
 <link 	href="./js/uploader/portable/css/bootstrap.min.css" 		type="text/css" rel="stylesheet"/>
@@ -19,6 +20,7 @@
 
 <link href="https://use.fontawesome.com/releases/v5.0.9/css/all.css"  rel="stylesheet" >
 <!-- /VUE -->
+</pre>
 </code>
 <h2>Call from PHP:</h2>
 <code>
