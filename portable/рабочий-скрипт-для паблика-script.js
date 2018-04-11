@@ -90,9 +90,9 @@ Vue.component("app-input", {
 
 Vue.component("app-upload", {
   props: ["component", "url", "formats", "readonly", "EntID"],
-  template: "\n  <div>\n\t<div v-if=\"upBtnView\" class=\"pull-center\">\n    <button\n    class=\"btn\"\n\t\t@click=\"btn_zagruzka\"\n\t\t:class=\"{\n      'btn-primary': seen, \n      'btn-danger': (!seen&&!readonly),\n      'btn-info': (!seen&&readonly)\n    }\"> <i class=\"glyphicon glyphicon-share\"></i>\n        <i class=\"fas\"\n          :class=\"{\n            'fa-paperclip':!seen,\n            'fa-times':seen}\"></i>\n\t\t\t\t{{btn_upload_text}}\n\t\t\t</button>\n\t\t<transition-group name=\"bounce\"\n\t\t>\n\t\t\t<div v-if=\"seen\" v-for=\"(file, index) in files\"\n\t\t\t\t:key=\"index\">\n\t\t\t<p is=\"app-input\"\n\t\t\t\t:url=\"url\"\n\t\t\t\t:component=\"component\"\n\t\t\t\t:readonly=\"readonly\"\n\t\t\t\t:EntID=\"EntID\"\n\t\t\t\t:title=\"file.title\"\n\t\t\t\t:id=\"index.replace('id','')\"\n\t\t\t\t:loaded=\"file.loaded\"\n\t\t\t\t:formats=\"formats\"\n\t\t\t\t:key2=\"index\"\n\t\t\t\t@uploaded=\"uploadedHandler\"\n\t\t\t></p>\n\t\t</div>\n\t\t</transition-group>\n\t</div>\n</div>",
+  template: "\n  <div>\n\t<div class=\"pull-center\">\n\t\t<button class=\"btn\"\n\t\t@click=\"btn_zagruzka\"\n\t\t:class=\"{\n      'btn-primary': seen, \n      'btn-danger': (!seen&&!readonly),\n      'btn-info': (!seen&&readonly)\n    } \n      \"> <i class=\"glyphicon glyphicon-share\"></i>\n        <i class=\"fas\"\n          :class=\"{\n            'fa-paperclip':!seen,\n            'fa-times':seen}\"></i>\n\t\t\t\t{{btn_upload_text}}\n\t\t\t</button>\n\t\t<transition-group name=\"bounce\"\n\t\t>\n\t\t\t<div v-if=\"seen\" v-for=\"(file, index) in files\"\n\t\t\t\t:key=\"index\">\n\t\t\t<p is=\"app-input\"\n\t\t\t\t:url=\"url\"\n\t\t\t\t:component=\"component\"\n\t\t\t\t:readonly=\"readonly\"\n\t\t\t\t:EntID=\"EntID\"\n\t\t\t\t:title=\"file.title\"\n\t\t\t\t:id=\"index.replace('id','')\"\n\t\t\t\t:loaded=\"file.loaded\"\n\t\t\t\t:formats=\"formats\"\n\t\t\t\t:key2=\"index\"\n\t\t\t\t@uploaded=\"uploadedHandler\"\n\t\t\t></p>\n\t\t</div>\n\t\t</transition-group>\n\t</div>\n</div>",
   data: function data() {
-    return { seen: false, files: [], msg: "", status: "", upBtnView: false };
+    return { seen: false, files: [], msg: "", status: "" };
   },
 
   computed: {
@@ -128,10 +128,6 @@ Vue.component("app-upload", {
       axios.get(that.url + "?component=" + that.component + "&get_list=1").then(function (res) {
         that.files = eval("(" + res.data + ")"); //парсим текст в объект;
         //console.log('that.files===>>',that.files);
-        if (!that.readonly) {
-          //тестим - есть ли что-то в списке уже загруженных;)
-          that.upBtnView = Object.keys(that.files).length > 0 ? true : false;
-        }
       }).then(function () {
         that.uploaded_list();
       }).catch(function (e) {
@@ -153,10 +149,10 @@ Vue.component("app-upload", {
             // console.log('uploadedDOCS=>>>',e,that.files)
             try {
               that.files["id" + e].loaded = 1;
-              that.upBtnView = true; //есть что-то в списке уже загруженных;)
             } catch (e) {
               console.info("file loaded ERRR => ", e, that);
-            } //console.log('that.files["id"+e]=>',that.files["id"+e])
+            }
+            //console.log('that.files["id"+e]=>',that.files["id"+e])
           });
         }
       });
@@ -230,14 +226,14 @@ function newVue(sel, comp, read, ur, frmt, EntID) {
   });
 }
 
-//  > USAGE 4demo => 	 <div align="center" id="app_1"></div> 
-/*let
-       selector = "#app_1",
-       component = "sudozahod",
-       readonly = 0,
-       url = "//192.168.202.103/seaport_new/doc_upload.php",
-       formats = ".pdf",
-       EntID = 123456;
-       newVue(selector, component, readonly, url, formats, EntID);
-       newVue("#app_2", "sudozahod", 1, url, formats, EntID);
- */
+//  > USAGE => 	 <div align="center" id="app_1"></div> 
+/*
+        selector = "#app_1";
+        component = "sudozahod";
+        readonly = 0;
+        url = "//192.168.202.103/seaport_new/doc_upload.php"
+        formats = ".pdf";
+        EntID = 123456;
+        newVue(selector, component, readonly, url, formats, EntID);
+        newVue("#app_2", "sudozahod", 0, url, formats, EntID);
+*/

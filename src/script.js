@@ -1,5 +1,15 @@
 ﻿Vue.component("app-input", {
-  props: ["title","formats","files","id","loaded","url","component","readonly","EntID"],
+  props: [
+    "title",
+    "formats",
+    "files",
+    "id",
+    "loaded",
+    "url",
+    "component",
+    "readonly",
+    "EntID"
+  ],
   template: `<div>
     <div class="docBlock" v-if="!readonly || (readonly && loaded) " >
     <span>{{title}}</span>
@@ -17,14 +27,16 @@
         </div>
         <b-progress :value="uploadPercentage" :max="max" show-progress animated></b-progress>
         <transition name="bounce">
-            <b-alert
+            <b-alert style="text-align:center"
                   :show="dismissCountDown"
                   dismissible
                   :variant="alertColor"
                   @dismissed="dismissCountdown=0"
                   @dismiss-count-down="countDownChanged">
-                  <h3>{{status==1?'':'Error! '}} {{msg}}</h3>
-            <h6>Это оповещение будет скрыто автоматически через {{dismissCountDown}} сек...</h6>
+                  <h3>
+                  <b-badge variant="success">{{status==1?'':'Error! '}} {{msg}} </b-badge>
+                  <br>
+            <b-badge variant="Light" style="font-size:14px;color:black">Это оповещение будет скрыто автоматически через {{dismissCountDown}} сек...</b-badge></b-badge></h3>
           </b-alert>
         </transition>
   </div>
@@ -43,7 +55,7 @@
     };
   },
   methods: {
-    changeMessage:  function(e) {
+    changeMessage: function(e) {
       this.message = e.target.value;
       this.$emit("messageChanged", this.message);
     },
@@ -62,13 +74,19 @@
     },
     uplHandler(e) {
       this.uplBtnStat = true; //  console.log(1,this,2,e)
-      var head = {headers: {"Accept": "application/json","Content-Type": "application/octet-stream"},
+      var head = {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/octet-stream"
+        },
         onUploadProgress: function(progressEvent) {
           if (progressEvent.loaded > 0 && progressEvent.total > 0) {
             this.uploadPercentage = parseInt(
               Math.round(progressEvent.loaded * 100 / progressEvent.total)
             );
-          } else {this.uploadPercentage = 0;}
+          } else {
+            this.uploadPercentage = 0;
+          }
         }.bind(this)
       };
       var that = this;
@@ -79,9 +97,8 @@
       fd.append("file", file, filename);
       fd.append("id", that.id);
       fd.append("EntID", that.EntID);
-      axios
-        .post(that.url + "?component=" + that.component + "&action=post", fd, head)
-        .then(function(res) {
+      axios.post(that.url + "?component=" + that.component + "&action=post",fd,head)
+      .then(function(res) {
           //console.log("success=>",res);
           that.msg = res.data.msg;
           that.status = res.data.status;
@@ -102,9 +119,11 @@
         });
     },
     countDownChanged(dismissCountDown) {
-		this.dismissCountDown = dismissCountDown;},
+      this.dismissCountDown = dismissCountDown;
+    },
     showAlert() {
-		this.dismissCountDown = this.dismissSecs;}
+      this.dismissCountDown = this.dismissSecs;
+    }
   }
 });
 
@@ -112,16 +131,22 @@
 ////////////////////////////////////
 
 Vue.component("app-upload", {
-  props: ["component", "url", "formats", "readonly"],
+  props: ["component", "url", "formats", "readonly", "EntID"],
   template: `
   <div>
-	<div class="pull-center">
-		<button
-		onclick="javascript:this"
-		class="btn"
+	<div v-if="upBtnView" class="pull-center">
+    <button
+    class="btn"
 		@click="btn_zagruzka"
-		:class="{'btn-dark': seen, 'btn-danger': !seen}">
-				<i class="fas fa-paperclip"></i>
+		:class="{
+      'btn-primary': seen, 
+      'btn-danger': (!seen&&!readonly),
+      'btn-info': (!seen&&readonly)
+    }"> <i class="glyphicon glyphicon-share"></i>
+        <i class="fas"
+          :class="{
+            'fa-paperclip':!seen,
+            'fa-times':seen}"></i>
 				{{btn_upload_text}}
 			</button>
 		<transition-group name="bounce"
@@ -145,14 +170,14 @@ Vue.component("app-upload", {
 	</div>
 </div>`,
   data() {
-    return { seen: false, files: [], msg: "", status: "", EntID: "" };
+    return { seen: false, files: [], msg: "", status: "", upBtnView:false };
   },
   computed: {
     btn_upload_text() {
       if (!this.seen && !this.readonly) {
-        return "Загрузить документы на " + this.component;
+        return "Загрузить документы"; //на " + this.component;
       } else if (!this.seen && this.readonly) {
-        return "Показать документы на " + this.component;
+        return "Показать документы"; // на " + this.component;
       } else {
         return "Скрыть";
       }
@@ -163,20 +188,26 @@ Vue.component("app-upload", {
       this.seen = !this.seen;
       if (this.component == "sudozahod") {
         var btn = document.querySelector(".btn-zahod");
-        if (btn) {btn.click();}
+        if (btn) {
+          btn.click();
+        }
       }
       if (this.component == "sudoothod") {
         var btn = document.querySelector(".btn-othod");
-        if (btn) {btn.click();}
+        if (btn) {
+          btn.click();
+        }
       }
     },
     listView: function() {
       var that = this;
-      axios
-        .get(that.url + "?component=" + that.component + "&get_list=1")
+      axios.get(that.url + "?component=" + that.component + "&get_list=1")
         .then(function(res) {
           that.files = eval("(" + res.data + ")"); //парсим текст в объект;
           //console.log('that.files===>>',that.files);
+           if (!that.readonly) {  //тестим - есть ли что-то в списке уже загруженных;)
+             that.upBtnView = Object.keys(that.files).length > 0 ? true : false;
+           }
         })
         .then(function() {
           that.uploaded_list();
@@ -184,16 +215,16 @@ Vue.component("app-upload", {
         .catch(function(e) {
           console.info("catch->", e);
           that.status = 0;
-          that.msg =
-            "Ошибка при проверке уже загруженных документов. Проверьте соединение.";
+          that.msg = "Ошибка при проверке уже загруженных документов. Проверьте соединение.";
           that.showAlert();
           that.alertColor = "danger";
         });
     },
     uploaded_list() {
       var that = this;
-      axios.get(that.url +"?component=" +that.component +"&action=get_uploaded_list&EntID="+that.EntID)
-        .then(function(res) {//console.log('ОТВЕТ2',res.data);
+      axios.get(that.url+"?component="+that.component+"&action=get_uploaded_list&EntID="+that.EntID)
+        .then(function(res) {
+          //console.log('ОТВЕТ2',res.data);
           if (res.data.msg != null) {
             var uploadedDocs = res.data.msg.split(",");
             // console.log('otvet->',uploadedDocs, 'that.files=>',that.files);
@@ -201,13 +232,13 @@ Vue.component("app-upload", {
               // console.log('uploadedDOCS=>>>',e,that.files)
               try {
                 that.files["id" + e].loaded = 1;
+                that.upBtnView = true; //есть что-то в списке уже загруженных;)
               } catch (e) {
                 console.info("file loaded ERRR => ", e, that);
-              }
-              //console.log('that.files["id"+e]=>',that.files["id"+e])
+              } //console.log('that.files["id"+e]=>',that.files["id"+e])
             });
           }
-        });
+        }) 
     },
     uploadedHandler: function(e, ee) {
       console.log(this, e, ee);
@@ -215,15 +246,6 @@ Vue.component("app-upload", {
     }
   },
   mounted() {
-    var params = window.location.search
-      .replace("?", "")
-      .split("&")
-      .reduce(function(p, e) {
-        var a = e.split("=");
-        p[decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
-        return p;
-      }, {});
-    this.EntID = params["EntID"];
     this.listView();
   }
 });
@@ -233,7 +255,7 @@ Vue.component("app-upload", {
 
 
 
-var tpl = `<div><app-upload :readonly="readonly" :url="url" :formats="formats" :component="component">
+var tpl = `<div><app-upload :EntID="EntID" :readonly="readonly" :url="url" :formats="formats" :component="component">
 			</app-upload></div>`;
 
 
@@ -276,7 +298,7 @@ new Vue({el: "#app_4",template: "<App_sudozahod></App_sudozahod>"});
   */
 
 
-function newVue(sel, comp, read, ur, frmt) {
+function newVue(sel, comp, read, ur, frmt, EntID) {
   new Vue({
     el: sel,
     template: tpl,
@@ -285,19 +307,22 @@ function newVue(sel, comp, read, ur, frmt) {
       component: comp,
       readonly: read,
       url: ur,
-      formats: frmt
+      formats: frmt,
+      EntID: EntID
     }
   });
 }
 
 
-//  > USAGE => 	 <div align="center" id="app_1"></div> 
-/*
-        selector = "#app_1";
-        component = "sudozahod";
-        readonly = 0;
-        url = "//192.168.202.103/seaport_new/doc_upload.php"
-        formats = ".pdf";
-        newVue(selector, component, readonly, url, formats);
-        newVue("#app_2", "sudozahod", 0, url, formats);
-*/
+//  > USAGE 4demo => 	 <div align="center" id="app_1"></div> 
+ /*let
+        selector = "#app_1",
+        component = "sudozahod",
+        readonly = 0,
+        url = "//192.168.202.103/seaport_new/doc_upload.php",
+        formats = ".pdf",
+        EntID = 123456;
+        newVue(selector, component, readonly, url, formats, EntID);
+        newVue("#app_2", "sudozahod", 1, url, formats, EntID);
+  */
+ 
