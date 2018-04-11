@@ -8,14 +8,14 @@
 <code>
 <pre>
 <!-- VUE -->
-<link 	href="./js/uploader/portable/css/style.css" type="text/css" rel="stylesheet"/>
+<link 	href="./js/uploader/portable/css/style.css"         type="text/css" rel="stylesheet"/>
 <link 	href="./js/uploader/portable/css/bootstrap.min.css" type="text/css" rel="stylesheet"/>
 <link 	href="./js/uploader/portable/css/bootstrap-vue.css" type="text/css" rel="stylesheet"/>
-<script src='./js/uploader/portable/libs/vue.js'    type="text/javascript"></script>
+<script src='./js/uploader/portable/libs/vue.js'            type="text/javascript"></script>
 <script	src="./js/uploader/portable/libs/bootstrap-vue.js"  type="text/javascript"></script>
-<script src="./js/uploader/portable/libs/axios.min.js"  type="text/javascript"></script>
+<script src="./js/uploader/portable/libs/axios.min.js"      type="text/javascript"></script>
 
-<script src="./js/uploader/portable/script.js"  type="text/javascript" ></script>
+<script src="./js/uploader/portable/script.js"              type="text/javascript" ></script>
 <script src="./js/uploader/portable/libs/polyfill.min.js"   type="text/javascript"></script>
 
 <link href="https://use.fontawesome.com/releases/v5.0.9/css/all.css"  rel="stylesheet" >
