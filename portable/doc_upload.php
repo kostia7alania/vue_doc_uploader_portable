@@ -8,9 +8,9 @@ echo '<br>get:<br>';  var_dump($_GET);
 echo '<br>file:<br>';  var_dump($_FILES); 
  */
 $user     = 'sa'; 
-$pass     = '013se*';  //$server   = '192.***.***.106';
+$pass     = '**********';  //$server   = '192.***.***.106';
 $server   = '***.***.***.103'; //$server   = 'localhost';
-$database = 'seaport_new';
+$database = 'seaport***_new';
 $connectionInfo=array("UID"=>$user,"PWD"=>$pass,"Database"=>$database);
 ///PDO
 try {$link = new PDO ("sqlsrv:Server=$server;Database=$database","$user","$pass");}
