@@ -32,7 +32,7 @@ else $doc =  '<div align="center" id="app_1"></div><script>selector = "#app_1"; 
 <h2>Basic usage</h2>
 <code>
 <pre>
-//  > USAGE 4demo => 	 <div align="center" id="app_1"></div> 
+//  > USAGE 4demo => 	<code> <div align="center" id="app_1"></div> </code>
 /*let
        selector = "#app_1",
        component = "sudozahod",
