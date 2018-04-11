@@ -38,7 +38,7 @@ let
        component = "sudozahod",
        readonly = 0,
        url = "//192.168.202.103/seaport_new/doc_upload.php",
-       formats = ".pdf",
+       formats = ".pdf,docx,doc",
        EntID = 123456;
        newVue(selector, component, readonly, url, formats, EntID); 
        //or:
