@@ -2,8 +2,9 @@
 
 
 <img src="https://sun1-4.userapi.com/c840429/v840429274/7371a/CgXOasGuA6g.jpg">
-USAGE:
-
+<h1>USAGE:</h1>
+<h4>HTML <head></h4>
+<code>
 <!-- VUE -->
 <link 	href="./js/uploader/portable/css/style.css" 						type="text/css" rel="stylesheet"/>
 <link 	href="./js/uploader/portable/css/bootstrap.min.css" 		type="text/css" rel="stylesheet"/>
@@ -17,7 +18,8 @@ USAGE:
 
 <link href="https://use.fontawesome.com/releases/v5.0.9/css/all.css"  rel="stylesheet" >
 <!-- /VUE -->
-
+</code>
+<h2>Call from PHP:</h2>
 <code>
 if ($row['Actual']==1) 
 $doc =  '<div align="center" id="app_1"></div><script>selector = "#app_1"; component = "sudos"; readonly = 0; formats = ".pdf";url123 = "//192.168.202.103/seaport_new/doc_upload.php"; newVue(selector, component, readonly, url123, formats,'.$ID.');</script>';
