@@ -34,8 +34,8 @@ else $doc =  '<div align="center" id="app_1"></div><script>selector = "#app_1"; 
 <pre>
 //  > USAGE 4demo => 	 
  < div align="center" id="app_1" ></ div >  
-  < div align="center" id="app_2" ></ div > 
-   
+ < div align="center" id="app_2" ></ div > 
+
 let
        selector = "#app_1",
        component = "sudozahod",
