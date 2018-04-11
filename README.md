@@ -1,6 +1,6 @@
 # vue_doc_uploader_portable
 Компонент позволяет загружать и открывать загруженные документы. 
-Пример серверной части можно найти в папке Portable -> doc_upload.php. 
+<p>Пример серверной части можно найти в папке <b>Portable -> doc_upload.php</b></p>. 
 
 <img src="https://sun1-4.userapi.com/c840429/v840429274/7371a/CgXOasGuA6g.jpg">
 <h1>USAGE:</h1>
