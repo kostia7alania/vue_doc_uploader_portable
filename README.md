@@ -30,6 +30,7 @@ else $doc =  '<div align="center" id="app_1"></div><script>selector = "#app_1"; 
 </code>
 
 <h2>Basic usage</h2>
+<code>
 <pre>
 //  > USAGE 4demo => 	 <div align="center" id="app_1"></div> 
 /*let
@@ -42,4 +43,6 @@ else $doc =  '<div align="center" id="app_1"></div><script>selector = "#app_1"; 
        newVue(selector, component, readonly, url, formats, EntID);
        newVue("#app_2", "sudozahod", 1, url, formats, EntID);
  */
+ 
 </pre>
+</code>
