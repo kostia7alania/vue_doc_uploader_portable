@@ -21,7 +21,7 @@
           type="file">
         <button v-if="!readonly" :disabled="uplBtnStat" class="btn btn-danger" v-on:click="uplHandler">Загрузить</button>
         <template v-if="loaded">
-        <a class="btn btn-danger" target="_blank"
+        <a class="btn btn-success" target="_blank"
         :href="url+'?component='+component+'&action=get_uploaded_list&EntID='+EntID+'&doc_id='+id">Открыть загруженный документ</a>
         </template>
         </div>
@@ -97,8 +97,13 @@
       fd.append("file", file, filename);
       fd.append("id", that.id);
       fd.append("EntID", that.EntID);
-      axios.post(that.url + "?component=" + that.component + "&action=post",fd,head)
-      .then(function(res) {
+      axios
+        .post(
+          that.url + "?component=" + that.component + "&action=post",
+          fd,
+          head
+        )
+        .then(function(res) {
           //console.log("success=>",res);
           that.msg = res.data.msg;
           that.status = res.data.status;
