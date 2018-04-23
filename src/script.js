@@ -36,7 +36,7 @@
                   :show="dismissCountDown"
                   dismissible
                   :variant="alertColor"
-                  @dismissed="this.dismissCountdown = 0"  
+                  @dismissed="dismissCountDown = 0"  
                   @dismiss-count-down="countDownChanged">
                   <h3>
                   <b-badge variant="success">{{status==1?'':'Error! '}} {{msg}} </b-badge>
