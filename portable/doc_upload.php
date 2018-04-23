@@ -1,4 +1,4 @@
-<? 
+﻿<? 
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
@@ -8,9 +8,9 @@ echo '<br>get:<br>';  var_dump($_GET);
 echo '<br>file:<br>';  var_dump($_FILES); 
  */
 $user     = 'sa'; 
-$pass     = '**********';  //$server   = '192.***.***.106';
+$pass     = '**********';  //$server   = '192.168.202.103';
 $server   = '***.***.***.103'; //$server   = 'localhost';
-$database = 'seaport***_new';
+$database = 'seaport_new';
 $connectionInfo=array("UID"=>$user,"PWD"=>$pass,"Database"=>$database);
 ///PDO
 try {$link = new PDO ("sqlsrv:Server=$server;Database=$database","$user","$pass");}
