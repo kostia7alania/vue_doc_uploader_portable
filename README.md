@@ -3,6 +3,8 @@
 <p>Пример серверной части можно найти в папке <b>Portable -> doc_upload.php</b></p>. 
 
 <img src="https://sun1-4.userapi.com/c840429/v840429274/7371a/CgXOasGuA6g.jpg">
+<img src="https://vk.com/doc40778210_463992267">
+
 <h1>USAGE:</h1>
 <h4>HTML ->head</h4>
 <code>
