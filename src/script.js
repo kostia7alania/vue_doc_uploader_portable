@@ -80,6 +80,7 @@
           that.alertColor = "success";
           that.showAlert();
           that.$emit("uploaded");
+          that.uploadPercentage = 0;
         })
         .catch(function(e) {
           console.info("catch->", e);
@@ -143,6 +144,7 @@
           that.status = res.data.status;
           that.showAlert();
           that.alertColor = "success";
+          that.$emit("uploaded");
         })
         .catch(function(e) {
           console.info("catch->", e);
@@ -388,7 +390,7 @@ function newVue(sel, comp, read, del, ur, frmt, EntID) {
 
 
 //  > USAGE 4demo => 	 <div align="center" id="app_1"></div> 
-  let
+ /* let
         selector = "#app_1",
         component = "sudozahod",
         readonly = 0,
@@ -399,4 +401,4 @@ function newVue(sel, comp, read, del, ur, frmt, EntID) {
         newVue(selector, component, readonly, canDelete, url, formats, EntID); //так;
         newVue("#app_2", "sudozahod", 1, 0, url, formats, EntID);//либо так;
   
- 
+ */
