@@ -39,15 +39,13 @@ else $doc =  '<div align="center" id="app_1"></div><script>selector = "#app_1"; 
 let
        selector = "#app_1",
        component = "sudozahod",
-       readonly = 0,
+       readonly = 0, 
        url = "//192.168.202.103/seaport_new/doc_upload.php",
        formats = ".pdf,docx,doc",
-       EntID = 123456;
-       newVue(selector, component, readonly, url, formats, EntID); 
-       //or:
-       newVue("#app_2", "sudozahod", 1, url, formats, EntID);
- 
- 
+       EntID = 123456,
+       canDelete = 1,
+       docs4postUpload = "id1"; //дает право загружать доки с этим ID даже если стоит отметка - readonly, при этом, если документ уже загружен, то его нельзя перезалить или удалить.
+       newVue(selector, component, readonly, url, formats, EntID, canDelete, docs4postUpload); 
 </pre>
 </code> 
 
