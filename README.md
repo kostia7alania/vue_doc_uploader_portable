@@ -25,16 +25,15 @@
 <h2>Call from PHP:</h2>
 <code>
 if ($row['Actual']==1) 
-$doc =  '<div align="center" id="app_1"></div><script>selector = "#app_1"; component = "sudos"; readonly = 0; formats = ".pdf";url123 = "//192.168.202.103/seaport***_new/doc_upload.php"; newVue(selector, component, readonly, url123, formats,'.$ID.');</script>';
-else $doc =  '<div align="center" id="app_1"></div><script>selector = "#app_1"; component = "sudos"; readonly = 1; formats = ".pdf";url123 = "//192.168.202.103/seaport***_new/doc_upload.php"; newVue(selector, component, readonly, url123, formats,'.$ID.');</script>';
+$doc =  '<div id="app_1"></div><script>var selector = "#app_1", component = "sudos", readonly = 0, formats = ".pdf", url123 = "//192.168.202.103/seaport***_new/doc_upload.php", canDelete = 1, docs4postUpload = "id44"; newVue(selector, component, readonly, url123, formats,'.$ID.', canDelete, docs4postUpload); </script>';
+else $doc =  '<div id="app_1"></div><script>var selector = "#app_1", component = "sudos", readonly = 1, formats = ".pdf", url123 = "//192.168.202.103/seaport***_new/doc_upload.php", canDelete = 1, docs4postUpload = "id44"; newVue(selector, component, readonly, url123, formats,'.$ID.', canDelete, docs4postUpload);</script>';
 </code>
 
 <h2>Basic usage</h2>
 <code>
 <pre>
 //  > USAGE 4demo => 	 
- < div align="center" id="app_1" ></ div >  
- < div align="center" id="app_2" ></ div > 
+ <div align="center" id="app_1" ></div>
 
 let
        selector = "#app_1",
