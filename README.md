@@ -55,3 +55,4 @@ let
 
 <img src="https://pp.userapi.com/c834102/v834102776/11174e/oZxAjIAhtB8.jpg">
 <img src="https://pp.userapi.com/c845322/v845322120/36ed9/UVptQSyjThM.jpg">
+<img src="https://m.vk.com/doc-125614288_465782482">

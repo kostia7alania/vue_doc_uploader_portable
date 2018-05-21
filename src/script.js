@@ -14,7 +14,9 @@
     "docs4postUpload"
   ],
   template: `<div> 
-    <div class="docBlock" v-if="!readonly || (readonly && (loaded || docs4postUpload.includes(key2)) )" >
+    <div class="docBlock" v-if="!readonly || 
+      (readonly && (loaded || docs4postUpload.includes(key2)) )
+      " >
     <span>{{title}}</span> 
 
        <div class="form-group pull-center">
@@ -393,7 +395,7 @@ function newVue(sel, comp, read = 1, ur, frmt, EntID, del = 0, docs4postUpload =
       url: ur,
       formats: frmt,
       EntID: EntID,
-      docs4postUpload: docs4postUpload
+      docs4postUpload: docs4postUpload.split(',')
     }
   });
 }
