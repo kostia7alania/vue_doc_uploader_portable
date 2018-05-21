@@ -26,7 +26,9 @@
 <code>
 if ($row['Actual']==1) 
 $doc =  '<div id="app_1"></div><script>var selector = "#app_1", component = "sudos", readonly = 0, formats = ".pdf", url123 = "//192.168.202.103/seaport***_new/doc_upload.php", canDelete = 1, docs4postUpload = "id44"; newVue(selector, component, readonly, url123, formats,'.$ID.', canDelete, docs4postUpload); </script>';
-else $doc =  '<div id="app_1"></div><script>var selector = "#app_1", component = "sudos", readonly = 1, formats = ".pdf", url123 = "//192.168.202.103/seaport***_new/doc_upload.php", canDelete = 1, docs4postUpload = "id44"; newVue(selector, component, readonly, url123, formats,'.$ID.', canDelete, docs4postUpload);</script>';
+
+else 
+$doc =  '<div id="app_1"></div><script>var selector = "#app_1", component = "sudos", readonly = 1, formats = ".pdf", url123 = "//192.168.202.103/seaport***_new/doc_upload.php", canDelete = 1, docs4postUpload = "id44"; newVue(selector, component, readonly, url123, formats,'.$ID.', canDelete, docs4postUpload);</script>';
 </code>
 
 <h2>Basic usage</h2>
