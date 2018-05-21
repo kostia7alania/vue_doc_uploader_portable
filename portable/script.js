@@ -1,8 +1,8 @@
 "use strict";
 
 Vue.component("app-input", {
-  props: ["title", "formats", "files", "id", "loaded", "url", "component", "readonly", "candelete", "EntID"],
-  template: "<div>\n    <div class=\"docBlock\" v-if=\"!readonly || (readonly && loaded) \" >\n    <span>{{title}}</span>\n      <div class=\"form-group pull-center\">\n        <input v-if=\"!readonly\"\n          ref=\"fileInput\"\n          @change=\"flsChange\"\n          :accept=\"formats\"\n          type=\"file\">\n          <button v-if=\"!readonly\" :disabled=\"uplBtnStat\" class=\"btn btn-danger\" v-on:click=\"uplHandler\">\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C</button>\n          <template v-if=\"loaded\">\n          <a class=\"btn btn-success\" target=\"_blank\" :href=\"url+'?component='+component+'&action=get_uploaded_list&EntID='+EntID+'&doc_id='+id\">\n            \u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u043D\u044B\u0439 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\n          </a>\n          <button :disabled=\"!candelete\" class=\"btn btn-info\" @click=\"deleteDoc\">\n             \u0423\u0434\u0430\u043B\u0438\u0442\u044C\n          </button>\n        </template>\n        </div>\n        <b-progress :value=\"uploadPercentage\" :max=\"max\" show-progress animated></b-progress>\n        <transition name=\"bounce\">\n            <b-alert style=\"text-align:center\"\n                  :show=\"dismissCountDown\"\n                  dismissible\n                  :variant=\"alertColor\"\n                  @dismissed=\"dismissCountDown = 0\"  \n                  @dismiss-count-down=\"countDownChanged\">\n                  <h3>\n                  <b-badge variant=\"success\">{{status==1?'':'Error! '}} {{msg}} </b-badge>\n                  <br>\n            <b-badge variant=\"Light\" style=\"font-size:14px;color:black\">\u042D\u0442\u043E \u043E\u043F\u043E\u0432\u0435\u0449\u0435\u043D\u0438\u0435 \u0431\u0443\u0434\u0435\u0442 \u0441\u043A\u0440\u044B\u0442\u043E \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u0447\u0435\u0440\u0435\u0437 {{dismissCountDown}} \u0441\u0435\u043A...</b-badge></b-badge></h3>\n          </b-alert>\n        </transition>\n  </div>\n\t  </div>",
+  props: ["title", "formats", "files", "id", "loaded", "url", "component", "readonly", "candelete", "EntID", "key2", "docs4postUpload"],
+  template: "<div> \n    <div class=\"docBlock\" v-if=\"!readonly || (readonly && (loaded || docs4postUpload.includes(key2)) )\" >\n    <span>{{title}}</span> \n\n       <div class=\"form-group pull-center\">\n\n        <template v-if=\"!readonly || (docs4postUpload.includes(key2) && !loaded)\"> \n          <input\n            ref=\"fileInput\"\n            @change=\"flsChange\"\n            :accept=\"formats\"\n            type=\"file\"\n          />\n          <button :disabled=\"uplBtnStat\" class=\"btn btn-danger\" @click=\"uplHandler\">\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C</button>\n        </template>\n\n        <template v-if=\"loaded\">\n          <a class=\"btn btn-success\" target=\"_blank\" :href=\"url+'?component='+component+'&action=get_uploaded_list&EntID='+EntID+'&doc_id='+id\">\n            \u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u043D\u044B\u0439 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\n          </a>\n          <button v-if=\"candelete\" :disabled=\"!candelete\" class=\"btn btn-info\" @click=\"deleteDoc\">\n             \u0423\u0434\u0430\u043B\u0438\u0442\u044C\n          </button>\n        </template>\n        </div>\n        <b-progress :value=\"uploadPercentage\" :max=\"max\" show-progress animated></b-progress>\n        <transition name=\"bounce\">\n            <b-alert style=\"text-align:center\"\n                  :show=\"dismissCountDown\"\n                  dismissible\n                  :variant=\"alertColor\"\n                  @dismissed=\"dismissCountDown = 0\"  \n                  @dismiss-count-down=\"countDownChanged\">\n                  <h3>\n                  <b-badge variant=\"success\">{{status==1?'':'Error! '}} {{msg}} </b-badge>\n                  <br>\n            <b-badge variant=\"Light\" style=\"font-size:14px;color:black\">\u042D\u0442\u043E \u043E\u043F\u043E\u0432\u0435\u0449\u0435\u043D\u0438\u0435 \u0431\u0443\u0434\u0435\u0442 \u0441\u043A\u0440\u044B\u0442\u043E \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u0447\u0435\u0440\u0435\u0437 {{dismissCountDown}} \u0441\u0435\u043A...</b-badge></b-badge></h3>\n          </b-alert>\n        </transition>\n  </div>\n\t  </div>",
   data: function data() {
     return {
       max: 100,
@@ -109,8 +109,8 @@ Vue.component("app-input", {
 ////////////////////////////////////
 
 Vue.component("app-upload", {
-  props: ["component", "url", "formats", "readonly", "candelete", "EntID"],
-  template: "\n  <div>\n\t<div v-if=\"upBtnView\" class=\"pull-center\">\n    <button\n    class=\"btn\"\n\t\t@click=\"btn_zagruzka\"\n\t\t:class=\"{\n      'btn-primary': seen, \n      'btn-danger': (!seen&&!readonly),\n      'btn-info': (!seen&&readonly)\n    }\"> <i class=\"glyphicon glyphicon-share\"></i>\n        <i class=\"fas\"\n          :class=\"{\n            'fa-paperclip':!seen,\n            'fa-times':seen}\"></i>\n\t\t\t\t{{btn_upload_text}}\n\t\t\t</button>\n\t\t<transition-group name=\"bounce\"\n\t\t>\n\t\t\t<div v-if=\"seen\" v-for=\"(file, index) in files\"\n\t\t\t\t:key=\"index\">\n      <p is=\"app-input\"\n\t\t\t\t:url=\"url\"\n\t\t\t\t:component=\"component\"\n        :readonly=\"readonly\"\n        :candelete=\"candelete\"\n\t\t\t\t:EntID=\"EntID\"\n\t\t\t\t:title=\"file.title\"\n\t\t\t\t:id=\"index.replace('id','')\"\n\t\t\t\t:loaded=\"file.loaded\"\n\t\t\t\t:formats=\"formats\"\n\t\t\t\t:key2=\"index\"\n        @uploaded=\"uploadedHandler\" \n\t\t\t></p>\n\t\t</div>\n\t\t</transition-group>\n\t</div>\n</div>",
+  props: ["component", "url", "formats", "readonly", "candelete", "EntID", "docs4postUpload"],
+  template: "\n  <div>\n\t<div v-if=\"upBtnView\" class=\"pull-center\">\n    <button\n    class=\"btn\"\n\t\t@click=\"btn_zagruzka\"\n\t\t:class=\"{\n      'btn-primary': seen, \n      'btn-danger': (!seen&&!readonly),\n      'btn-info': (!seen&&readonly)\n    }\"> <i class=\"glyphicon glyphicon-share\"></i>\n        <i class=\"fas\"\n          :class=\"{\n            'fa-paperclip':!seen,\n            'fa-times':seen}\"></i>\n\t\t\t\t{{btn_upload_text}}\n\t\t\t</button>\n\t\t<transition-group name=\"bounce\"\n\t\t>\n\t\t\t<div v-if=\"seen\" v-for=\"(file, index) in files\"\n\t\t\t\t:key=\"index\">\n      <p is=\"app-input\"\n\t\t\t\t:url=\"url\"\n\t\t\t\t:component=\"component\"\n        :readonly=\"readonly\"\n        :candelete=\"candelete\"\n\t\t\t\t:EntID=\"EntID\"\n\t\t\t\t:title=\"file.title\"\n\t\t\t\t:id=\"index.replace('id','')\"\n\t\t\t\t:loaded=\"file.loaded\"\n\t\t\t\t:formats=\"formats\"\n        :key2=\"index\"\n        :docs4postUpload=\"docs4postUpload\"\n        @uploaded=\"uploadedHandler\" \n\t\t\t></p>\n\t\t</div>\n\t\t</transition-group>\n\t</div>\n</div>",
   data: function data() {
     return { seen: false, files: [], msg: "", status: "", upBtnView: false };
   },
@@ -203,7 +203,7 @@ Vue.component("app-upload", {
 ////////////////////////////////////
 
 
-var tpl = "<div><app-upload :EntID=\"EntID\" :readonly=\"readonly\" :candelete=\"candelete\" :url=\"url\" :formats=\"formats\" :component=\"component\">\n\t\t\t</app-upload></div>";
+var tpl = "<div><app-upload :EntID=\"EntID\" :readonly=\"readonly\" :docs4postUpload=\"docs4postUpload\" :candelete=\"candelete\" :url=\"url\" :formats=\"formats\" :component=\"component\">\n\t\t\t</app-upload></div>";
 
 /*
 
@@ -243,7 +243,14 @@ new Vue({el: "#app_4",template: "<App_sudozahod></App_sudozahod>"});
   });
   */
 
-function newVue(sel, comp, read, del, ur, frmt, EntID) {
+function newVue(sel, comp) {
+  var read = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+  var ur = arguments[3];
+  var frmt = arguments[4];
+  var EntID = arguments[5];
+  var del = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 0;
+  var docs4postUpload = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : "";
+
   new Vue({
     el: sel,
     template: tpl,
@@ -254,7 +261,8 @@ function newVue(sel, comp, read, del, ur, frmt, EntID) {
       candelete: del,
       url: ur,
       formats: frmt,
-      EntID: EntID
+      EntID: EntID,
+      docs4postUpload: docs4postUpload
     }
   });
 }

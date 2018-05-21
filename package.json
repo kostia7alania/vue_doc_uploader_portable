@@ -4,7 +4,8 @@
   "description": "TESTIRUEM !! ! ",
   "scripts": {
     "start": "babel src -d portable",
-    "www": "babel src -d portable -w"
+    "www": "babel src -d portable -w",
+    "nod": "node index.js"
   },
   "babel": {
     "presets": [

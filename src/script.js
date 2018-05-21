@@ -9,23 +9,31 @@
     "component",
     "readonly",
     "candelete",
-    "EntID"
+    "EntID",
+    "key2",
+    "docs4postUpload"
   ],
-  template: `<div>
-    <div class="docBlock" v-if="!readonly || (readonly && loaded) " >
-    <span>{{title}}</span>
-      <div class="form-group pull-center">
-        <input v-if="!readonly"
-          ref="fileInput"
-          @change="flsChange"
-          :accept="formats"
-          type="file">
-          <button v-if="!readonly" :disabled="uplBtnStat" class="btn btn-danger" v-on:click="uplHandler">Загрузить</button>
-          <template v-if="loaded">
+  template: `<div> 
+    <div class="docBlock" v-if="!readonly || (readonly && (loaded || docs4postUpload.includes(key2)) )" >
+    <span>{{title}}</span> 
+
+       <div class="form-group pull-center">
+
+        <template v-if="!readonly || (docs4postUpload.includes(key2) && !loaded)"> 
+          <input
+            ref="fileInput"
+            @change="flsChange"
+            :accept="formats"
+            type="file"
+          />
+          <button :disabled="uplBtnStat" class="btn btn-danger" @click="uplHandler">Загрузить</button>
+        </template>
+
+        <template v-if="loaded">
           <a class="btn btn-success" target="_blank" :href="url+'?component='+component+'&action=get_uploaded_list&EntID='+EntID+'&doc_id='+id">
             Открыть загруженный документ
           </a>
-          <button :disabled="!candelete" class="btn btn-info" @click="deleteDoc">
+          <button v-if="candelete" :disabled="!candelete" class="btn btn-info" @click="deleteDoc">
              Удалить
           </button>
         </template>
@@ -171,7 +179,7 @@
 ////////////////////////////////////
 
 Vue.component("app-upload", {
-  props: ["component", "url", "formats", "readonly", "candelete", "EntID"],
+  props: ["component", "url", "formats", "readonly", "candelete", "EntID", "docs4postUpload"],
   template: `
   <div>
 	<div v-if="upBtnView" class="pull-center">
@@ -203,7 +211,8 @@ Vue.component("app-upload", {
 				:id="index.replace('id','')"
 				:loaded="file.loaded"
 				:formats="formats"
-				:key2="index"
+        :key2="index"
+        :docs4postUpload="docs4postUpload"
         @uploaded="uploadedHandler" 
 			></p>
 		</div>
@@ -330,7 +339,7 @@ Vue.component("app-upload", {
 
 
 
-var tpl = `<div><app-upload :EntID="EntID" :readonly="readonly" :candelete="candelete" :url="url" :formats="formats" :component="component">
+var tpl = `<div><app-upload :EntID="EntID" :readonly="readonly" :docs4postUpload="docs4postUpload" :candelete="candelete" :url="url" :formats="formats" :component="component">
 			</app-upload></div>`;
 
 
@@ -372,7 +381,7 @@ new Vue({el: "#app_4",template: "<App_sudozahod></App_sudozahod>"});
   });
   */
  
-function newVue(sel, comp, read, del, ur, frmt, EntID) {
+function newVue(sel, comp, read = 1, ur, frmt, EntID, del = 0, docs4postUpload = "") {
   new Vue({
     el: sel,
     template: tpl,
@@ -383,7 +392,8 @@ function newVue(sel, comp, read, del, ur, frmt, EntID) {
       candelete: del,
       url: ur,
       formats: frmt,
-      EntID: EntID
+      EntID: EntID,
+      docs4postUpload: docs4postUpload
     }
   });
 }

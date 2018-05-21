@@ -38,13 +38,21 @@
 	var selector = "#app_1", component = "sudozahod",
         readonly = 1,		 canDelete = 1,
         url = "//192.168.202.103/seaport_new/doc_upload.php",
-		formats = ".pdf", 	 
-		EntID = 123456;
-	newVue(selector, component, readonly, canDelete, url, formats, EntID); //так;
-	newVue("#app_2", "sudozahod", 1, 0, url, formats, EntID);//либо так;
- 	newVue("#app_3", "sudozahod", 0, 1, url, formats, EntID);//либо так;
-	newVue("#app_4", "sudozahod", 0, 0, url, formats, EntID);//либо так;
+		formats = ".pdf",
+		EntID = 123456; 
 
+	//newVue(selector, component, readonly, url, formats, EntID, canDelete); //так;
+	
+/*	newVue("#app_1", "sudos", readonly, url, formats, EntID, canDelete); //так;
+ 	newVue("#app_2", "sudos", 	1, 		  url, formats, EntID, 1);//либо так;
+ 	newVue("#app_3", "sudos", 	0, 		  url, formats, EntID, 1);//либо так;
+ 	newVue("#app_4", "sudos",   0,   	  url, formats, EntID, 1);//либо так;
+ */
+ newVue("#app_1", "sudozahod", readonly, url, formats, EntID, canDelete, "id1,id2"); //так;
+ newVue("#app_2", "sudozahod", 1, url, formats, EntID, 1);//либо так;
+ newVue("#app_3", "sudozahod", 0, url, formats, EntID, 1, "id1,id2");//либо так;
+ newVue("#app_4", "sudozahod", 0, url, formats, EntID, 1, "id1,id2");//либо так;
+ 
 </script>
 </body>
 </html>

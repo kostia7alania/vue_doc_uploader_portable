@@ -69,7 +69,8 @@ function  get_uploaded_list_doc_id_sql_exec ($sql, $link) {
         try{$stmt->execute(); 
             while($row = $stmt->fetch()){
                 $msg = $row['Documents']; $status=1;
-                    echo header('Content-Type: application/pdf');
+                    header('Content-Type: application/pdf');
+                      //header('Content-Disposition: attachment; filename="Document-'.$_GET['doc_id'].'.pdf"');
                         $msg = str_replace('data:application/pdf;base64,','',$msg);
                            echo (base64_decode($msg));
                                 die();
