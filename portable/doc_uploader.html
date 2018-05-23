@@ -40,18 +40,13 @@
         url = "//192.168.202.103/seaport_new/doc_upload.php",
 		formats = ".pdf",
 		EntID = 123456; 
-
-	//newVue(selector, component, readonly, url, formats, EntID, canDelete); //так;
-	
-/*	newVue("#app_1", "sudos", readonly, url, formats, EntID, canDelete); //так;
- 	newVue("#app_2", "sudos", 	1, 		  url, formats, EntID, 1);//либо так;
- 	newVue("#app_3", "sudos", 	0, 		  url, formats, EntID, 1);//либо так;
- 	newVue("#app_4", "sudos",   0,   	  url, formats, EntID, 1);//либо так;
- */
- newVue("#app_1", "sudozahod", readonly, url, formats, EntID, canDelete, "id1"); //так;
- newVue("#app_2", "sudozahod", 1, url, formats, EntID, 0, "id1");//либо так;
- newVue("#app_3", "sudozahod", 0, url, formats, EntID, 1, "id1", "id2,id3");//либо так;
- newVue("#app_4", "sudozahod", 0, url, formats, EntID, 0, "id1",'id1');//либо так;
+		dogruzka_doc_id = "id1,id2",
+		ban_doc_id =  "id3,id4,id5";
+ 
+ newVue("#app_1", "sudozahod", readonly, url, formats, EntID, canDelete, dogruzka_doc_id, ban_doc_id); //так;
+ newVue("#app_2", "sudozahod", 1, url, formats, EntID, 0, dogruzka_doc_id, ban_doc_id);//либо так;
+ newVue("#app_3", "sudozahod", 0, url, formats, EntID, 1, dogruzka_doc_id, ban_doc_id);//либо так;
+ newVue("#app_4", "sudozahod", 0, url, formats, EntID, 0, dogruzka_doc_id, ban_doc_id);//либо так;
  
 </script>
 </body>
