@@ -1,4 +1,6 @@
-﻿Vue.component("app-input", {
+﻿  
+
+Vue.component("app-input", {
   props: [
     "title",
     "formats",
@@ -35,9 +37,13 @@
           <a class="btn btn-success" target="_blank" :href="url+'?component='+component+'&action=get_uploaded_list&EntID='+EntID+'&doc_id='+id">
             Открыть загруженный документ
           </a>
-          <button v-if="candelete" :disabled="!candelete" class="btn btn-info" @click="deleteDoc">
-             Удалить
-          </button>
+
+          <b-btn
+            v-b-modal.modalPopover 
+            v-if="candelete" class="btn btn-info" 
+            @click="del_modal(title,key2)"
+          >Удалить</b-btn> 
+     
         </template>
         </div>
         <b-progress :value="uploadPercentage" :max="max" show-progress animated></b-progress>
@@ -54,7 +60,8 @@
             <b-badge variant="Light" style="font-size:14px;color:black">Это оповещение будет скрыто автоматически через {{dismissCountDown}} сек...</b-badge></b-badge></h3>
           </b-alert>
         </transition>
-  </div>
+      </div> 
+
 	  </div>`,
   data() {
     return {
@@ -67,39 +74,15 @@
       dismissCountDown: false,
       alertColor: "warning",
       uplBtnStat: true
-    };
+    }
   },
   methods: {
-    deleteDoc(e) {
-      console.log("this", this, "e", e);
-      var that = this;
-      axios
-        .get(
-          that.url +
-            "?component=" +
-            that.component +
-            "&action=delete_doc&id=" +
-            that.id +
-            "&EntID=" +
-            that.EntID
-        )
-        .then(function(res) {
-          console.log("success=>", res);
-          that.msg = res.data.msg;
-          that.status = res.data.status;
-          that.alertColor = "success";
-          that.showAlert();
-          that.$emit("uploaded");
-          that.uploadPercentage = 0;
-        })
-        .catch(function(e) {
-          console.info("catch->", e);
-          that.status = 0;
-          that.msg = "Ошибка при удалении. Проверьте соединение.";
-          that.showAlert();
-          that.alertColor = "danger";
-        });
+    del_modal(delDocName, delDocId) {
+    //  console.log('delDocName=>', delDocName, 'delDocId=>', delDocId);
+      this.uploadPercentage = this.dismissCountDown = 0;
+      this.$emit('docDelConfirm', delDocName, delDocId);
     },
+   
     changeMessage: function(e) {
       this.message = e.target.value;
       this.$emit("messageChanged", this.message);
@@ -179,6 +162,8 @@
 
 
 ////////////////////////////////////
+////////////////////////////////////
+////////////////////////////////////
 
 Vue.component("app-upload", {
   props: ["component", "url", "formats", "readonly", "candelete", "EntID", "docs4postUpload"],
@@ -215,14 +200,29 @@ Vue.component("app-upload", {
 				:formats="formats"
         :key2="index"
         :docs4postUpload="docs4postUpload"
-        @uploaded="uploadedHandler" 
+        @uploaded="uploadedHandler"
+        @docDelConfirm="docDelConfirm"
 			></p>
 		</div>
 		</transition-group>
-	</div>
+  </div>
+  
+
+        <b-modal 
+            ok-title="Подтверждаю"
+            cancel-title="Отмена"
+            :centered="true"
+            @ok="deleteDoc" id="modalPopover" title="Вы действительно хотите удалить документ?">
+          <p class="pull-center"><b>{{delDocName}}</b></p>
+          <hr>          
+          <h4 class="pull-center" >Подтвердите удаление</h4>
+            
+        </b-modal>  
+
+
 </div>`,
   data() {
-    return { seen: false, files: [], msg: "", status: "", upBtnView: false };
+    return { delDocName:'', delDocId:'', seen: false, files: [], msg: "", status: "", upBtnView: false };
   },
   computed: {
     btn_upload_text() {
@@ -235,7 +235,34 @@ Vue.component("app-upload", {
       }
     }
   },
-  methods: { 
+  methods: {
+      deleteDoc() {
+        var that = this;
+        axios
+          .get(
+            that.url +
+            "?component=" +
+            that.component +
+            "&action=delete_doc&id=" + this.delDocId +
+            //that.id +
+            "&EntID=" +
+            that.EntID
+          )
+          .then(function (res) {
+           // console.log(res);
+            that.listView();
+          })
+          .catch(function (e) {
+            console.log(e);
+            alert("Ошибка при удалении. Проверьте соединение.");
+          });
+      },
+    docDelConfirm(e, ee) {
+      this.delDocName = e;
+      this.delDocId = ee.replace('id','');
+     // console.log('e=>', e);
+      //console.log('ee=>', ee);
+    },
     btn_zagruzka() {
       this.seen = !this.seen;
       if (this.component == "sudozahod") {
@@ -327,8 +354,8 @@ Vue.component("app-upload", {
     },
 
     uploadedHandler: function(e, ee) {
-      console.log(this, e, ee);
-      this.listView();
+     // console.log('uploadedHandler=>', this, e, ee);
+      this.listView(); 
     }
   },
   mounted() {
