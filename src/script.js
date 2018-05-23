@@ -166,7 +166,7 @@ Vue.component("app-input", {
 ////////////////////////////////////
 
 Vue.component("app-upload", {
-  props: ["component", "url", "formats", "readonly", "candelete", "EntID", "docs4postUpload"],
+  props: ["component", "url", "formats", "readonly", "candelete", "EntID", "docs4postUpload", 'disabledDocIds'],
   template: `
   <div>
 	<div v-if="upBtnView" class="pull-center">
@@ -186,7 +186,7 @@ Vue.component("app-upload", {
 			</button>
 		<transition-group name="bounce"
 		>
-			<div v-if="seen" v-for="(file, index) in files"
+			<div v-if="seen && !(disabledDocIds.includes(index))" v-for="(file, index) in files"
 				:key="index">
       <p is="app-input"
 				:url="url"
@@ -368,7 +368,7 @@ Vue.component("app-upload", {
 
 
 
-var tpl = `<div><app-upload :EntID="EntID" :readonly="readonly" :docs4postUpload="docs4postUpload" :candelete="candelete" :url="url" :formats="formats" :component="component">
+var tpl = `<div><app-upload :disabledDocIds="disabledDocIds" :EntID="EntID" :readonly="readonly" :docs4postUpload="docs4postUpload" :candelete="candelete" :url="url" :formats="formats" :component="component">
 			</app-upload></div>`;
 
 
@@ -410,7 +410,7 @@ new Vue({el: "#app_4",template: "<App_sudozahod></App_sudozahod>"});
   });
   */
  
-function newVue(sel, comp, read = 1, ur, frmt, EntID, del = 0, docs4postUpload = "") {
+function newVue(sel, comp, read = 1, ur, frmt, EntID, del = 0, docs4postUpload = "", disabledDocIds="") {
   new Vue({
     el: sel,
     template: tpl,
@@ -422,7 +422,8 @@ function newVue(sel, comp, read = 1, ur, frmt, EntID, del = 0, docs4postUpload =
       url: ur,
       formats: frmt,
       EntID: EntID,
-      docs4postUpload: docs4postUpload.split(',')
+      docs4postUpload: docs4postUpload.split(","),
+      disabledDocIds: disabledDocIds.split(',')
     }
   });
 }

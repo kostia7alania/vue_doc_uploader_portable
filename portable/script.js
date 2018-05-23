@@ -98,8 +98,8 @@ Vue.component("app-input", {
 ////////////////////////////////////
 
 Vue.component("app-upload", {
-  props: ["component", "url", "formats", "readonly", "candelete", "EntID", "docs4postUpload"],
-  template: "\n  <div>\n\t<div v-if=\"upBtnView\" class=\"pull-center\">\n    <button\n    class=\"btn\"\n\t\t@click=\"btn_zagruzka\"\n\t\t:class=\"{\n      'btn-primary': seen, \n      'btn-danger': (!seen&&!readonly),\n      'btn-info': (!seen&&readonly)\n    }\"> <i class=\"glyphicon glyphicon-share\"></i>\n        <i class=\"fas\"\n          :class=\"{\n            'fa-paperclip':!seen,\n            'fa-times':seen}\"></i>\n\t\t\t\t{{btn_upload_text}}\n\t\t\t</button>\n\t\t<transition-group name=\"bounce\"\n\t\t>\n\t\t\t<div v-if=\"seen\" v-for=\"(file, index) in files\"\n\t\t\t\t:key=\"index\">\n      <p is=\"app-input\"\n\t\t\t\t:url=\"url\"\n\t\t\t\t:component=\"component\"\n        :readonly=\"readonly\"\n        :candelete=\"candelete\"\n\t\t\t\t:EntID=\"EntID\"\n\t\t\t\t:title=\"file.title\"\n\t\t\t\t:id=\"index.replace('id','')\"\n\t\t\t\t:loaded=\"file.loaded\"\n\t\t\t\t:formats=\"formats\"\n        :key2=\"index\"\n        :docs4postUpload=\"docs4postUpload\"\n        @uploaded=\"uploadedHandler\"\n        @docDelConfirm=\"docDelConfirm\"\n\t\t\t></p>\n\t\t</div>\n\t\t</transition-group>\n  </div>\n  \n\n        <b-modal \n            ok-title=\"\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\"\n            cancel-title=\"\u041E\u0442\u043C\u0435\u043D\u0430\"\n            :centered=\"true\"\n            @ok=\"deleteDoc\" id=\"modalPopover\" title=\"\u0412\u044B \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u043E \u0445\u043E\u0442\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0438\u0442\u044C \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442?\">\n          <p class=\"pull-center\"><b>{{delDocName}}</b></p>\n          <hr>          \n          <h4 class=\"pull-center\" >\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0435</h4>\n            \n        </b-modal>  \n\n\n</div>",
+  props: ["component", "url", "formats", "readonly", "candelete", "EntID", "docs4postUpload", 'disabledDocIds'],
+  template: "\n  <div>\n\t<div v-if=\"upBtnView\" class=\"pull-center\">\n    <button\n    class=\"btn\"\n\t\t@click=\"btn_zagruzka\"\n\t\t:class=\"{\n      'btn-primary': seen, \n      'btn-danger': (!seen&&!readonly),\n      'btn-info': (!seen&&readonly)\n    }\"> <i class=\"glyphicon glyphicon-share\"></i>\n        <i class=\"fas\"\n          :class=\"{\n            'fa-paperclip':!seen,\n            'fa-times':seen}\"></i>\n\t\t\t\t{{btn_upload_text}}\n\t\t\t</button>\n\t\t<transition-group name=\"bounce\"\n\t\t>\n\t\t\t<div v-if=\"seen && !(disabledDocIds.includes(index))\" v-for=\"(file, index) in files\"\n\t\t\t\t:key=\"index\">\n      <p is=\"app-input\"\n\t\t\t\t:url=\"url\"\n\t\t\t\t:component=\"component\"\n        :readonly=\"readonly\"\n        :candelete=\"candelete\"\n\t\t\t\t:EntID=\"EntID\"\n\t\t\t\t:title=\"file.title\"\n\t\t\t\t:id=\"index.replace('id','')\"\n\t\t\t\t:loaded=\"file.loaded\"\n\t\t\t\t:formats=\"formats\"\n        :key2=\"index\"\n        :docs4postUpload=\"docs4postUpload\"\n        @uploaded=\"uploadedHandler\"\n        @docDelConfirm=\"docDelConfirm\"\n\t\t\t></p>\n\t\t</div>\n\t\t</transition-group>\n  </div>\n  \n\n        <b-modal \n            ok-title=\"\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\"\n            cancel-title=\"\u041E\u0442\u043C\u0435\u043D\u0430\"\n            :centered=\"true\"\n            @ok=\"deleteDoc\" id=\"modalPopover\" title=\"\u0412\u044B \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u043E \u0445\u043E\u0442\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0438\u0442\u044C \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442?\">\n          <p class=\"pull-center\"><b>{{delDocName}}</b></p>\n          <hr>          \n          <h4 class=\"pull-center\" >\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0435</h4>\n            \n        </b-modal>  \n\n\n</div>",
   data: function data() {
     return { delDocName: '', delDocId: '', seen: false, files: [], msg: "", status: "", upBtnView: false };
   },
@@ -210,7 +210,7 @@ Vue.component("app-upload", {
 ////////////////////////////////////
 
 
-var tpl = "<div><app-upload :EntID=\"EntID\" :readonly=\"readonly\" :docs4postUpload=\"docs4postUpload\" :candelete=\"candelete\" :url=\"url\" :formats=\"formats\" :component=\"component\">\n\t\t\t</app-upload></div>";
+var tpl = "<div><app-upload :disabledDocIds=\"disabledDocIds\" :EntID=\"EntID\" :readonly=\"readonly\" :docs4postUpload=\"docs4postUpload\" :candelete=\"candelete\" :url=\"url\" :formats=\"formats\" :component=\"component\">\n\t\t\t</app-upload></div>";
 
 /*
 
@@ -257,6 +257,7 @@ function newVue(sel, comp) {
   var EntID = arguments[5];
   var del = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 0;
   var docs4postUpload = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : "";
+  var disabledDocIds = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : "";
 
   new Vue({
     el: sel,
@@ -269,7 +270,8 @@ function newVue(sel, comp) {
       url: ur,
       formats: frmt,
       EntID: EntID,
-      docs4postUpload: docs4postUpload.split(',')
+      docs4postUpload: docs4postUpload.split(","),
+      disabledDocIds: disabledDocIds.split(',')
     }
   });
 }
