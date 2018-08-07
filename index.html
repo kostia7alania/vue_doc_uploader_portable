@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Test Doc Uploader Portable Vue.js</title>
+
+<!-- VUE -->
+<link href="./css/style.css" type="text/css" rel="stylesheet" />
+<link href="./css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+<link href="./css/bootstrap-vue.css" type="text/css" rel="stylesheet" />
+<script src='./libs/vue.js' type="text/javascript"></script>
+<script src="./libs/bootstrap-vue.js" type="text/javascript"></script>
+<script src="./libs/axios.min.js" type="text/javascript"></script>
+<!-- /VUE -->
+
+</head>
+<body> 
+
+<H1>readonly=1, canDelete=1:</H1> <div align="center" id="app_1"></div>
+<H1>readonly=1, canDelete=0:</H1> <div align="center" id="app_2"></div>
+<H1>readonly=0, canDelete=1:</H1> <div align="center" id="app_3"></div>
+<H1>readonly=0, canDelete=0:</H1> <div align="center" id="app_4"></div> 
+
+<p>
+	click
+	<a href="//2ip.ru" target="_blank">here</a>
+	to test
+</p>
+
+<!-- VUE -->
+<script src="/dist/build.js"></script>
+<script src="./libs/polyfill.min.js" type="text/javascript"></script>
+<!-- /VUE -->
+
+<script>
+	var selector = "#app_1", component = "sudozahod",
+        readonly = 1,		 canDelete = 1,
+        url = "//192.168.202.103/seaport_new/doc_upload.php",
+		formats = ".pdf",
+		EntID = 123456; 
+		dogruzka_doc_id = "id1,id2",
+		ban_doc_id =  "id3,id4,id5";
+ 
+ newVue("#app_1", "sudozahod", readonly, url, formats, EntID, canDelete, dogruzka_doc_id, ban_doc_id); //так;
+ newVue("#app_2", "sudozahod", 1, url, formats, EntID, 0, dogruzka_doc_id, ban_doc_id);//либо так;
+ newVue("#app_3", "sudozahod", 0, url, formats, EntID, 1, dogruzka_doc_id, ban_doc_id);//либо так;
+ newVue("#app_4", "sudozahod", 0, url, formats, EntID, 0, dogruzka_doc_id, ban_doc_id);//либо так;
+ 
+</script>
+</body>
+</html>
