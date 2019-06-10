@@ -1,31 +1,34 @@
-//import Vue from 'vue'; 
-import App from "./App.vue"; 
+//import Vue from 'vue';
+import App from "./App.vue";
 
-window.newVue = (sel, comp, read = 1, ur, frmt, EntID, del = 0, docs4postUpload = "", disabledDocIds="") => { 
+window.EventBus = new Vue();
+
+window.newVue = (sel, component, readonly = 1, url, formats, EntID, candelete = 0, docs4postUpload="", disabledDocIds="", isCapitan = 0) => {
   new Vue({
     el: sel,
     render: h => h(App, {
       props: {
-        component: comp,
-        readonly: read,
-        candelete: del,
-        url: ur,
-        formats: frmt,
-        EntID: EntID,
+        component,
+        readonly,
+        candelete,
+        url,
+        formats,
+        EntID,
         docs4postUpload: docs4postUpload.split(","),
-        disabledDocIds: disabledDocIds.split(',')  
+        disabledDocIds: disabledDocIds.split(','),
+        isCapitan
       }
     })
-  }) 
+  })
 }
- 
 
 
 
 
-/* 
+
+/*
 Vue.component("App_sudozahod", {
-  template: `<div><app-upload  :readonly="readonly" :url="url" :formats="formats" :component="component"></app-upload> 
+  template: `<div><app-upload  :readonly="readonly" :url="url" :formats="formats" :component="component"></app-upload>
   </div>`,
   data() {
     return {
@@ -35,7 +38,7 @@ Vue.component("App_sudozahod", {
       formats: ".pdf"
     };
   }
-}); 
+});
 
 
 new Vue({el: "#app_2",template: "<App_sudozahod></App_sudozahod>"});
@@ -60,7 +63,7 @@ new Vue({el: "#app_4",template: "<App_sudozahod></App_sudozahod>"});
 
 
 
-//  > USAGE 4demo => 	 <div align="center" id="app_1"></div> 
+//  > USAGE 4demo => 	 <div align="center" id="app_1"></div>
  /* let
         selector = "#app_1",
         component = "sudozahod",
@@ -71,5 +74,5 @@ new Vue({el: "#app_4",template: "<App_sudozahod></App_sudozahod>"});
         EntID = 123456;
         newVue(selector, component, readonly, canDelete, url, formats, EntID); //так;
         newVue("#app_2", "sudozahod", 1, 0, url, formats, EntID);//либо так;
-  
+
  */
