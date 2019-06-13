@@ -31,6 +31,20 @@
       </div>
       </transition-group>
     </div>
+
+
+
+    <b-alert
+      :show="dismissCountDown"
+      dismissible
+      fade
+      variant="warning"
+      @dismiss-count-down="countDownChanged"
+    >
+    <span>{{ alertText }}</span>
+       Оповещение закроется через {{ dismissCountDown }} сек...
+    </b-alert>
+
     <b-modal
         ref="my-modal"
         :ok-title="modal_okTitle"
@@ -67,7 +81,12 @@ export default {
       msg: "",
       status: "",
       upBtnView: false,
-      confirm:[]
+      confirm:[],
+
+      alertText: 'Ошибка соединения с сервером!',
+        dismissSecs: 5,
+        dismissCountDown: 0,
+
     };
   },
    computed: {
@@ -97,6 +116,13 @@ export default {
     }
   },
   methods: {
+      countDownChanged(dismissCountDown) {
+        this.dismissCountDown = dismissCountDown
+      },
+      showAlert(alertText = 'Ошибка соединения с сервером!') {
+        this.alertText = alertText
+        this.dismissCountDown = this.dismissSecs
+      },
     go_modal(nameDOC,idDOC, modal_mode) {
       this.$refs['my-modal'].show()
       this.modal_docName = nameDOC;
@@ -120,21 +146,22 @@ export default {
           .then(res=>{ // console.log(res);
             this.listView();
           })
-          .catch( e => { console.log(e);
-            alert("Ошибка при удалении. Проверьте соединение.");
+          .catch( e => {
+            console.log(e);
+            this.showAlert('Ошибка при удалении. Проверьте соединение.');
           });
       },
       confirmDoc() {
         axios
           .get(this.url + "?component=" + this.component + "&action=confirm_doc&id=" + this.modal_docId +"&EntID=" +this.EntID)
           .then(res=> this.listView() )
-          .catch( e => alert("Ошибка при подтверждении документа. Проверьте соединение.") );
+          .catch( e => this.showAlert('Ошибка при подтверждении документа. Проверьте соединение.') );
       },
       unConfirmDoc() {
         axios
           .get(this.url + "?component=" + this.component + "&action=unconfirm_doc&id=" + this.modal_docId +"&EntID=" +this.EntID)
           .then(res=> this.listView() )
-          .catch( e => alert("Ошибка при отмене подтверждении документа. Проверьте соединение.") );
+          .catch( e => this.showAlert('Ошибка при отмене подтверждении документа. Проверьте соединение.') );
       },
     btn_zagruzka() {
       this.seen = !this.seen;
@@ -167,6 +194,8 @@ export default {
           //that.showAlert();
           //that.alertColor = "danger";
           this.loading=0;
+          if (e.response.status === 401) this.showAlert('Необходимо повторно авторизироваться. ')
+          else this.showAlert('Ошибка при проверке уже загруженных документов. Проверьте соединение.')
         });
     },
     uploaded_list () {
@@ -184,14 +213,16 @@ export default {
               try {
                 this.files["id" + e].loaded = 1;
                 this.upBtnView = true; //есть что-то в списке уже загруженных;)
-              } catch (err) { if (group == 0) { //console.groupCollapsed("=>uploaded_list:");
-                             }
+              } catch (err) { if (
+                group == 0) { //console.groupCollapsed("=>uploaded_list:");
+
+              }
               group = 1;
               console.info("=>File loaded ERRR => ","=>uploadedDocs:",uploadedDocs,"\n","=>e:",e,"\n","=>this.files:",this.files,"\n","=>this:",this,"\n","=>err:",err);
               } //console.log('that.files["id"+e]=>',that.files["id"+e])
             });
           }
-        });
+        })
       if (group != 0) {/*console.groupEnd();*/}
     },
 
