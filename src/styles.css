@@ -1,0 +1,48 @@
+.disabled_check * {
+  cursor: not-allowed;
+  color:red;
+}
+.enabled_check * {
+  cursor:pointer;
+}
+.btn,.hover_effects { /* .btn заюзал чтобы в модалке тож пахало (без кастомизации ее футера) */
+  transition: .05s;
+}
+.btn:hover,.hover_effects:hover {
+  transform: scale(1.05);
+}
+.btn:active,.hover_effects:active {
+  transform: scale(0.95);
+}
+
+
+
+.modal-dialog.modal-md.modal-dialog-centered {
+  color: black;
+}
+
+.custom-file {
+  width: auto !important;
+}
+
+.custom-file-input:lang(en) ~ .custom-file-label::after {
+  content: 'Обзор';
+}
+
+.custom-file-input,
+.custom-file-input ~ .custom-file-label::after {
+  cursor: pointer; /*не пашет*/
+}
+
+
+.custom-file-input:hover ~ .custom-file-label::after {
+  transform: scale(1.2);
+  transition:.2s;
+  border-radius: 5px;
+}
+
+.custom-file-input:active ~ .custom-file-label::after {
+  transform: scale(.8);
+  transition:.1s;
+  color:red;
+}
