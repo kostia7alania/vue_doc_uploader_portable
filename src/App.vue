@@ -9,8 +9,13 @@
         {{ btn_upload_text }}
       </button>
       <transition-group name="bounce">
-        <div v-if="loading==0 && seen && !(disabledDocIds.includes(index))" v-for="(file, index) in files" :key="index">
-        <p is="app-input"
+        <div
+          v-for="(file, index) in files"
+          :key="index"
+        >
+
+        <inputvue
+          v-if="loading==0 && seen && !(disabledDocIds.includes(index))"
           :url="url"
           :component="component"
           :readonly="readonly"
@@ -26,9 +31,12 @@
           :docs4postUpload="docs4postUpload"
           @uploaded="uploadedHandler"
           @go_modal="go_modal"
-        ></p>
-        <h3 v-if="loading==1">Loading...</h3>
+        />
+
+        <h3 v-if="loading==1">Загрузка...</h3>
+
       </div>
+
       </transition-group>
     </div>
 
@@ -65,10 +73,10 @@
 </template>
 
 <script>
-import input from "./Input.vue";
+import inputvue from "./Input.vue";
 
 export default {
- components: { 'app-input': input },
+ components: { inputvue },
   props: ["component", "url", "formats", "readonly", "candelete", "EntID", "docs4postUpload", 'disabledDocIds', 'isCapitan'],
   data() {
     return {
@@ -231,12 +239,4 @@ export default {
   mounted() {this.listView();/*грузит все доки .!.*/  }
 }
 
-
-
-
 </script>
-<style>
-  .modal-dialog.modal-md.modal-dialog-centered {
-    color: black;
-  }
-</style>
