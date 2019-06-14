@@ -12,6 +12,7 @@
           :component="component"
           :id="id"
           :EntID="EntID"
+          :iconsPath="iconsPath"
           @uploadPercentage="uploadPercentage = $event"
           @showAlertEmit="showAlertEmit"
           @uploaded="$emit('uploaded')"
@@ -19,11 +20,16 @@
 
         <template v-if="loaded">
 
-          <a class="btn btn-success hover_effects" target="_blank" :href="url+'?component='+component+'&action=get_uploaded_list&EntID='+EntID+'&doc_id='+id">
-            Открыть загруженный документ
+          <a class="btn btn-success hover_effects" target="_blank"
+            :href="url+'?component='+component+'&action=get_uploaded_list&EntID='+EntID+'&doc_id='+id">
+
+             <img :src="iconsPath+'pdf.svg'" class="btn-icons" />
+             Открыть загруженный документ
           </a>
 
-          <b-btn v-if="candelete && !checked_local" class="btn btn-info hover_effects" @click="go_modal('del')">Удалить</b-btn>
+          <b-btn v-if="candelete && !checked_local" class="btn btn-info hover_effects" @click="go_modal('del')">
+            <img :src="iconsPath+'trash.svg'" class="btn-icons" />
+            Удалить</b-btn>
 
           <b-form-checkbox v-if="isCapitan" @change="toggleAll" class="enabled_check hover_effects"
             v-model="checked_local" >{{ switches_text }}
@@ -48,7 +54,7 @@
                   <h3>
                   <b-badge variant="success">{{ status }}==1?'':'Error! '}} {{msg}} </b-badge>
                   <br>
-              <b-badge variant="Light" style="font-size:14px;color:black">Это оповещение будет скрыто автоматически через {{dismissCountDown}} сек...</b-badge>
+              <b-badge variant="Light" style="font-size:14px;color:black">Это оповещение будет скрыто автоматически через {{ dismissCountDown }} сек...</b-badge>
             </h3>
           </b-alert>
         </transition>
@@ -59,9 +65,10 @@
 </template>
 
 <script>
+
 import UploadVue from './Upload.vue';
 export default {
-  props: ["title","formats","files","id","loaded","url","component","readonly","candelete","EntID","key2","docs4postUpload", "isCapitan", 'confirm'],
+  props: ["title","formats","files","id","loaded","url","component","readonly","candelete","EntID","key2","docs4postUpload", "isCapitan", 'confirm', 'iconsPath'],
   components: {"upload":UploadVue},
   data() {
     return {

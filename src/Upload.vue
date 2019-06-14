@@ -1,7 +1,7 @@
 <template>
   <span>
-    <!--<input ref="fileInput" @change="flsChange" :accept="formats" type="file" />-->
 
+    <input ref="fileInput" @change="flsChange" :accept="formats" type="file" />
 
     <!--
     <label class="file">
@@ -9,21 +9,30 @@
       <span class="file-custom"></span>
     </label>
     -->
-
+<!--
     <b-form-file @change="flsChange" :file-name-formatter="formatNames" required :accept="formats"></b-form-file>
+-->
+    <button v-if="isShowBtn"
+    :disabled="loading" class="btn btn-danger hover_effects" @click="uplHandler">
+       <img :src="iconsPath+'upload.svg'" class="btn-icons">
 
-    <button :disabled="uplBtnStat" class="btn btn-danger hover_effects" @click="uplHandler">Загрузить</button>
+      Загрузить</button>
   </span>
 </template>
 
 <script>
 export default {
-  props: ['formats', 'url', 'component', 'id', 'EntID'],
+  props: [ 'formats', 'url', 'component', 'id', 'EntID', 'iconsPath' ],
   //props: ["title","","files","id","loaded","url","component",,"candelete","EntID","key2","", "isCapitan", ''],
   data() {
     return {
       file: undefined,
-      uplBtnStat: true,
+      loading: false,
+    }
+  },
+  computed: {
+    isShowBtn() {
+      return this.file
     }
   },
   methods: {
@@ -42,7 +51,6 @@ export default {
       window.t = this;
     },
     uplHandler(e) {
-      this.uplBtnStat = true; //  console.log(1,this,2,e)
       const head = {
         headers: { Accept: "application/json", "Content-Type": "application/octet-stream" },
         onUploadProgress: e => {
@@ -56,6 +64,8 @@ export default {
       fd.append("file", this.file, this.file.name);
       fd.append("id", this.id);
       fd.append("EntID", this.EntID);
+
+      this.loading = 1
       axios
         .post(
           this.url + "?component=" + this.component + "&action=post",
@@ -71,9 +81,9 @@ export default {
           console.info("catch->", e);
           setTimeout( () => {
             this.$emit('uploadPercentage', 0)
-            this.uplBtnStat = false;
           }, 1000);
-        });
+        })
+        .finally(()=>this.loading=0)
     },
   }
 }

@@ -28,6 +28,9 @@
 .custom-file-input:lang(en) ~ .custom-file-label::after {
   content: 'Обзор';
 }
+.custom-file-input:lang(ru) ~ .custom-file-label::after {
+  content: 'Обзор';
+}
 
 .custom-file-input,
 .custom-file-input ~ .custom-file-label::after {
@@ -45,4 +48,11 @@
   transform: scale(.8);
   transition:.1s;
   color:red;
+}
+
+
+.btn-icons {
+  display:none;
+  width: 42px;
+  margin: -10px;
 }

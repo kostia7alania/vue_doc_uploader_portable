@@ -4,7 +4,7 @@ import  "./styles.css";
 
 window.EventBus = new Vue();
 
-window.newVue = (sel, component, readonly = 1, url, formats, EntID, candelete = 0, docs4postUpload="", disabledDocIds="", isCapitan = 0) => {
+window.newVue = (sel, component, readonly = 1, url, formats, EntID, candelete = 0, docs4postUpload="", disabledDocIds="", isCapitan = 0, iconsPath=process.env.NODE_ENV !== 'production'?"./src/icons/":'./js/uploader/portable/icons/') => {
   new Vue({
     el: sel,
     render: h => h(App, {
@@ -17,12 +17,14 @@ window.newVue = (sel, component, readonly = 1, url, formats, EntID, candelete = 
         EntID,
         docs4postUpload: docs4postUpload.split(","),
         disabledDocIds: disabledDocIds.split(','),
-        isCapitan
+        isCapitan,
+        iconsPath
       }
     })
   })
 }
 
+Vue.config.devtools = true
 
 
 
