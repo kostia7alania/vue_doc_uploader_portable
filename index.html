@@ -37,17 +37,18 @@
 <script>
 	var selector = "#app_1", component = "sudozahod",
         readonly = 1,		 canDelete = 1,
-        url = "//192.168.202.103/seaport_new/doc_upload.php",
-		formats = ".pdf",
-		EntID = 123456;
+        url = " /doc_upload.php",
+ 		formats = ".pdf",
+		EntID = 123456,
 		dogruzka_doc_id = "id1,id2",
     ban_doc_id =  "id3,id4,id5",
-    isCapitan = 1;
+    isCapitan = 1,
+    iconsPath = './js/uploader/portable/icons/'
 
- newVue("#app_1", "sudozahod", readonly, url, formats, EntID, canDelete, dogruzka_doc_id, ban_doc_id, isCapitan); //так;
+ newVue("#app_1", "sudozahod", readonly, url, formats, EntID, canDelete, dogruzka_doc_id, ban_doc_id, isCapitan/*, iconsPath*/); //так;
  newVue("#app_2", "sudozahod", 1, url, formats, EntID, 0, dogruzka_doc_id, ban_doc_id, 0);//либо так;
- newVue("#app_3", "sudozahod", 0, url, formats, EntID, 1, dogruzka_doc_id, ban_doc_id);//либо так;
- newVue("#app_4", "sudozahod", 0, url, formats, EntID, 0, dogruzka_doc_id, ban_doc_id, isCapitan);//либо так;
+ newVue("#app_3", "sudozahod", 0, url, formats, EntID, 1, dogruzka_doc_id, ban_doc_id, null);//либо так;
+ newVue("#app_4", "sudozahod", 0, url, formats, EntID, 0, dogruzka_doc_id, ban_doc_id, !isCapitan);//либо так;
 
 </script>
 </body>
