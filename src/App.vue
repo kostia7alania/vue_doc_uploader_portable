@@ -129,6 +129,7 @@ export default {
         this.dismissCountDown = this.dismissSecs
       },
     go_modal(nameDOC,idDOC, modal_mode) {
+      if(this.modal_mode == 'sign') return this.confirmDoc(); // =>подтверждение без подтверждения);
       this.$refs['my-modal'].show()
       this.modal_docName = nameDOC;
       this.modal_docId = idDOC;
@@ -142,7 +143,7 @@ export default {
     },
     modal_OK_HANDLER() {
       if(this.modal_mode == 'del') this.deleteDoc();
-      if(this.modal_mode == 'sign') this.confirmDoc();
+      if(this.modal_mode == 'sign') this.confirmDoc(); // не юзается ща
       if(this.modal_mode == 'unsign') this.unConfirmDoc();
     },
     deleteDoc() {
