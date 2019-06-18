@@ -96,7 +96,7 @@ export default {
         if( obj.title == this.title && obj.key2==this.key2.replace('id','')) {
           this.checked_local = this.confirm
           this.$forceUpdate();
-          console.log('event bus!!')
+          //console.log('event bus!!')
         }
       });
   },
@@ -110,7 +110,7 @@ export default {
       this.showAlert()
     },
     toggleAll(e){
-      console.log('toggleAll!!',e)
+     // console.log('toggleAll!!',e)
       let bool = e;
     if(e=='object')  bool = e.target.checked
      bool?this.go_modal('sign'):this.go_modal('unsign')
