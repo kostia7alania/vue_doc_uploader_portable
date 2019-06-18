@@ -129,11 +129,11 @@ export default {
         this.dismissCountDown = this.dismissSecs
       },
     go_modal(nameDOC,idDOC, modal_mode) {
-      if(this.modal_mode == 'sign') return this.confirmDoc(); // =>подтверждение без подтверждения);
-      this.$refs['my-modal'].show()
       this.modal_docName = nameDOC;
       this.modal_docId = idDOC;
       this.modal_mode = modal_mode;
+      if(modal_mode == 'sign') return this.confirmDoc(); // =>подтверждение без подтверждения);
+      this.$refs['my-modal'].show()
     },
     cancelHandler() {
       EventBus.$emit("cancelHandler", {
@@ -211,11 +211,14 @@ export default {
        .get(this.url + "?component=" + this.component + "&action=get_uploaded_list&EntID=" + this.EntID )
         .then( res => {           //console.log('ОТВЕТ2',res.data);
 
-          this.confirm = res.data && res.data.confirm || []
-
           if ( res.data && res.data.msg != null ) {
+            const confirmPosition = res.data && res.data.confirm && res.data.confirm.split(',') || []
             const uploadedDocs = res.data.msg && res.data.msg.split(',');
+            this.confirm=[]
             uploadedDocs.forEach( (e,i) => {
+
+              confirmPosition[i]==1? this.confirm.push(e):'';
+
               try { this.files["id" + e].loaded = 1; }
               catch (err) {
                 if (group == 0) {};
