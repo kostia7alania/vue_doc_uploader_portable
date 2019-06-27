@@ -1,10 +1,12 @@
 //import Vue from 'vue';
 import App from "./App.vue";
-import  "./styles.css";
+import "./styles.css";
 
 window.EventBus = new Vue();
 
-window.newVue = (sel, component, readonly = 1, url, formats, EntID, candelete = 0, docs4postUpload="", disabledDocIds="", isCapitan = 0, iconsPath=process.env.NODE_ENV !== 'production'?"./src/icons/":'./js/uploader/portable/icons/') => {
+Vue.config.devtools = true
+
+window.newVue = (sel, component, readonly = 1, url, formats, EntID, candelete = 0, docs4postUpload = "", disabledDocIds = "", isCapitan = 0, iconsPath = process.env.NODE_ENV !== 'production' ? "./src/icons/" : './js/uploader/portable/icons/') => {
   new Vue({
     el: sel,
     render: h => h(App, {
@@ -67,15 +69,15 @@ new Vue({el: "#app_4",template: "<App_sudozahod></App_sudozahod>"});
 
 
 //  > USAGE 4demo => 	 <div align="center" id="app_1"></div>
- /* let
-        selector = "#app_1",
-        component = "sudozahod",
-        readonly = 0,
-        canDelete = 1,
-        url = "//192.168.202.103/seaport_new/doc_upload.php",
-        formats = ".pdf",
-        EntID = 123456;
-        newVue(selector, component, readonly, canDelete, url, formats, EntID); //так;
-        newVue("#app_2", "sudozahod", 1, 0, url, formats, EntID);//либо так;
+/* let
+       selector = "#app_1",
+       component = "sudozahod",
+       readonly = 0,
+       canDelete = 1,
+       url = "//192.168.202.103/seaport_new/doc_upload.php",
+       formats = ".pdf",
+       EntID = 123456;
+       newVue(selector, component, readonly, canDelete, url, formats, EntID); //так;
+       newVue("#app_2", "sudozahod", 1, 0, url, formats, EntID);//либо так;
 
- */
+*/
