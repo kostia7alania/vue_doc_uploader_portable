@@ -5,9 +5,10 @@
      v-if="!readonly ||
       (readonly && (loaded || docs4postUpload.includes(key2)) )
       " >
+     
     <span>{{title}} <span style="color:red"></span> </span>
        <div class="form-group pull-center">
-
+ 
         <upload v-if="(!readonly || (docs4postUpload.includes(key2) && !loaded)) && !checked_local"
           :formats="formats"
           :url="url"
@@ -19,8 +20,8 @@
           @showAlertEmit="showAlertEmit"
           @uploaded="$emit('uploaded')"
         />
-
-        <template v-if="loaded">
+ 
+       <div v-if="loaded">
 
           <a class="btn btn-success hover_effects" target="_blank"
             :href="url+'?component='+component+'&action=get_uploaded_list&EntID='+EntID+'&doc_id='+id">
@@ -32,19 +33,24 @@
           <b-btn v-if="candelete && !checked_local" class="btn btn-info hover_effects" @click="go_modal('del')">
             <img :src="iconsPath+'trash.svg'" class="btn-icons" />
             Удалить</b-btn>
-
+<!-- бесконечные баги  -если включить транзишн-груп-->
           <b-form-checkbox v-if="isCapitan" @change="toggleAll" class="enabled_check hover_effects"
             v-model="checked_local" >{{ switches_text }}
-          </b-form-checkbox>
-          <b-form-checkbox v-if="!isCapitan && checked_local" class="disabled_check"
-            :checked="checked_local" disabled>подтверждено
-          </b-form-checkbox>
-
-        </template>
+          </b-form-checkbox> 
+<!-- фиксил временно бесконечные лаги -)
+            <input :id="'check'+id" type="checkbox" v-if="isCapitan" @change="toggleAll" class="enabled_check hover_effects"
+              v-model="checked_local">
+            <label :for="'check'+id">{{switches_text}}</label>
+-->
+            <b-form-checkbox v-if="!isCapitan && checked_local" class="disabled_check"
+              :checked="checked_local" disabled> подтверждено
+            </b-form-checkbox>
 
         </div>
 
-        <b-progress :value="uploadPercentage" :max="max" show-progress animated></b-progress>
+        </div> 
+
+        <b-progress v-if="uploadPercentage" :value="uploadPercentage" :max="max" show-progress animated></b-progress>
 
         <transition name="bounce">
             <b-alert style="text-align:center"
@@ -60,6 +66,7 @@
             </h3>
           </b-alert>
         </transition>
+      
       </div>
 </template>
 
@@ -99,20 +106,14 @@ export default {
   },
   watch: {
     confirm(neww, old) {
-      if (neww != old) {
-        this.checked_local = this.confirm;
-        //this.$forceUpdate();
-      }
+      if (neww != old) this.checked_local = this.confirm; 
     }
   },
   mounted() {
     this.checked_local = this.confirm;
     EventBus.$on("cancelHandler", obj => {
-      if (obj.title == this.title && obj.key2 == this.key2.replace("id", "")) {
-        this.checked_local = this.confirm;
-        //this.$forceUpdate();
-        //console.log('event bus!!')
-      }
+      if (obj.title == this.title && obj.key2 == this.key2.replace("id", ""))  
+        this.checked_local = this.confirm;  
     });
   },
   computed: {
@@ -126,23 +127,13 @@ export default {
       this.status = e.status;
       this.showAlert();
     },
-    toggleAll(e) {
-      // console.log('toggleAll!!',e)
-      let bool = e;
-      if (e == "object") bool = e.target.checked;
-      bool ? this.go_modal("sign") : this.go_modal("unsign");
+    toggleAll(e) {   
+       event.target.checked ? this.go_modal("sign") : this.go_modal("unsign");
     },
-    go_modal(modal_mode) {
-      //  console.log('delDocName=>', delDocName, 'delDocId=>', delDocId);
+    go_modal(modal_mode) { 
       this.uploadPercentage = this.dismissCountDown = 0;
-      this.$emit(
-        "go_modal",
-        this.title,
-        this.key2.replace("id", ""),
-        modal_mode
-      );
+      this.$emit( "go_modal", this.title, this.key2.replace("id", ""), modal_mode );
     },
-
     changeMessage(e) {
       this.message = e.target.value;
       this.$emit("messageChanged", this.message);

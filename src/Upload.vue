@@ -71,10 +71,8 @@ export default {
       const fd = new FormData();
       fd.append("file", this.file, this.file.name);
       fd.append("id", this.id);
-      fd.append("EntID", this.EntID);
-
-      this.loading = 1;
-
+      fd.append("EntID", this.EntID); 
+      this.loading = 1; 
       axios
         .post(
           this.url + "?component=" + this.component + "&action=post",

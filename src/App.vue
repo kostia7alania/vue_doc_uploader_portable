@@ -2,62 +2,50 @@
   <div>
 
     <div v-if="isFilesIsset" class="pull-center">
-      <button class="btn" @click="btn_zagruzka" :class="{ 'btn-primary': seen,
-                                                          'btn-danger': (!seen&&!readonly),
-                                                          'btn-info': (!seen&&readonly) }">
+      <button class="btn" @click="btn_zagruzka" :class="{ 'btn-primary': isShown,
+                                                          'btn-danger': (!isShown&&!readonly),
+                                                          'btn-info': (!isShown&&readonly) }"
+        >
         <i class="glyphicon glyphicon-share"></i>
-        <i class="fas" :class="{ 'fa-paperclip':!seen, 'fa-times':seen}"></i>
+        <i class="fas" :class="{ 'fa-paperclip':!isShown, 'fa-times':isShown}"></i>
         {{ btn_upload_text }}
       </button>
-      <transition-group name="bounce">
-          <inputvue v-for="(file, index) in files" :key="file.title"
-            v-if="seen && !(disabledDocIds.includes(index))"
-            v-show="loading==0"
+
+      <div v-if="!loading && isShown"> 
+          <inputvue v-for="(file, index) in files"
+            :key="file.title" 
+            v-show="!(disabledDocIds.includes(index))"
             :url="url"
             :component="component"
             :readonly="readonly"
             :candelete="candelete"
             :EntID="EntID"
             :title="file.title"
-            :id="index.replace('id','')"
+            :id="file.id"
             :loaded="file.loaded"
             :formats="formats"
             :isCapitan="isCapitan"
-            :confirm="confirm.includes(index.replace('id',''))"
-            :reloaded="reloaded.includes(index.replace('id',''))"
-            :key2="index"
+            :confirm="confirm.includes(file.id)"
+            :reloaded="reloaded.includes(file.id)"
+            :key2="'id'+file.id"
             :docs4postUpload="docs4postUpload"
             :iconsPath="iconsPath"
             @uploaded="uploadedHandler"
             @go_modal="go_modal"
           />
-
-      </transition-group>
+         
+      </div>
     </div>
+    
+    <loading  v-if="loading && isShown" :iconsPath='iconsPath' />
 
-    <loading v-if="loading==1" :iconsPath='iconsPath' />
-
-    <b-alert
-      :show="dismissCountDown"
-      dismissible
-      fade
-      variant="warning"
-      @dismiss-count-down="countDownChanged"
-    >
-      {{ alertText }} Оповещение закроется через {{ dismissCountDown }} сек...
-    </b-alert>
-
+    <b-alert :show="!!alertText" dismissible fade variant="warning" >  {{ alertText }}  </b-alert>
     <b-modal
         ref="my-modal"
-        :ok-title="modal_okTitle"
-        cancel-title="Отмена"
-        :centered="true"
-        no-close-on-esc
-        hide-header-close
-        no-close-on-backdrop
-        @cancel="cancelHandler"
-        @ok="modal_OK_HANDLER"
+        @ok="modal_OK_HANDLER" @cancel="cancelHandler"
+        :ok-title="modal_okTitle" cancel-title="Отмена"
         :title='modal_title'
+        :centered="true" no-close-on-esc hide-header-close no-close-on-backdrop
       >
       <p class="pull-center"><b>{{ modal_docName }}</b></p>
       <hr>
@@ -87,28 +75,23 @@ export default {
   ],
   data() {
     return {
-      loading: 0,
+      loading: false,
+      isShown: false,
       modal_docName: "",
       modal_docId: "",
       modal_mode: null,
-      seen: false,
-      files: {},
+      files: [],
       msg: "",
       status: "",
-      confirm: [],
+      alertText: "", 
       reloaded: [],
-      alertText: "Ошибка соединения с сервером!",
-      dismissSecs: 5,
-      dismissCountDown: 0
+      confirm: [], 
     };
-  },
+  }, 
   computed: {
-    isFilesIsset() {
-      //тестим - есть ли что-то в списке уже загруженных;)
-      return (
-        !this.readonly ||
-        Object.keys(this.files).filter(e => this.files[e].loaded == 1).length
-      );
+    isFilesIsset() { //тестим - есть ли что-то в списке уже загруженных;)
+     return 1; //всегда отображать
+    // return !this.readonly || this.files.filter(e => e.loaded == 1).length
     },
     modal_okTitle() {
       const m = this.modal_mode;
@@ -121,9 +104,9 @@ export default {
         : "Ok";
     },
     btn_upload_text() {
-      if (!this.seen && !this.readonly) {
+      if (!this.isShown && !this.readonly) {
         return "Загрузить документы"; //на " + this.component;
-      } else if (!this.seen && this.readonly) {
+      } else if (!this.isShown && this.readonly) {
         return "Показать документы"; // на " + this.component;
       } else {
         return "Скрыть";
@@ -145,12 +128,8 @@ export default {
     }
   },
   methods: {
-    countDownChanged(dismissCountDown) {
-      this.dismissCountDown = dismissCountDown;
-    },
     showAlert(alertText = "Ошибка соединения с сервером!") {
-      this.alertText = alertText;
-      this.dismissCountDown = this.dismissSecs;
+      this.alertText = alertText; 
     },
     go_modal(nameDOC, idDOC, modal_mode) {
       this.modal_docName = nameDOC;
@@ -172,150 +151,83 @@ export default {
     },
     deleteDoc() {
       axios
-        .get(
-          this.url +
-            "?component=" +
-            this.component +
-            "&action=delete_doc&id=" +
-            this.modal_docId +
-            "&EntID=" +
-            this.EntID
-        )
-        .then(res => {
-          // console.log(res);
-          this.listView();
-        })
-        .catch(e => {
-          console.log(e);
-          this.showAlert("Ошибка при удалении. Проверьте соединение.");
-        });
+        .get(`${this.url}?component=${this.component}&action=delete_doc&id=${this.modal_docId}&EntID=${this.EntID}`)
+        .then(res => this.listView() )
+        .catch(err =>  this.showAlert(`Ошибка при удалении. Сообщение: ${err.message}`))
     },
     confirmDoc() {
       axios
-        .get(
-          this.url +
-            "?component=" +
-            this.component +
-            "&action=confirm_doc&id=" +
-            this.modal_docId +
-            "&EntID=" +
-            this.EntID
-        )
+        .get(`${this.url}?component=${this.component}&action=confirm_doc&id=${this.modal_docId}&EntID=${this.EntID}`)
         .then(res => this.listView())
         .catch(e => {
-          this.showAlert(
-            "Ошибка при подтверждении документа. Проверьте соединение."
-          );
+          this.showAlert( "Ошибка при подтверждении документа. Проверьте соединение." );
           this.cancelHandler();
         });
     },
     unConfirmDoc() {
       axios
-        .get(
-          this.url +
-            "?component=" +
-            this.component +
-            "&action=unconfirm_doc&id=" +
-            this.modal_docId +
-            "&EntID=" +
-            this.EntID
-        )
+        .get(`${this.url}?component=${this.component}&action=unconfirm_doc&id=${this.modal_docId}&EntID=${this.EntID}`)
         .then(res => this.listView())
         .catch(e => {
-          this.showAlert(
-            "Ошибка при отмене подтверждении документа. Проверьте соединение."
-          );
+          this.showAlert( "Ошибка при отмене подтверждении документа. Проверьте соединение." );
           this.cancelHandler();
         });
     },
     btn_zagruzka() {
-      this.seen = !this.seen;
+      this.isShown = !this.isShown;
+      if(this.isShown) this.listView();
       if (this.component == "sudozahod") {
         const btn = document.querySelector(".btn-zahod");
-        if (btn) {
-          btn.click();
-        }
+        if (btn) btn.click();
       }
       if (this.component == "sudoothod") {
         const btn = document.querySelector(".btn-othod");
-        if (btn) {
-          btn.click();
-        }
+        if (btn) btn.click();
       }
     },
     listView() {
-      this.loading = 1;
+      this.loading = true;
       axios
-        .get(this.url + "?component=" + this.component + "&get_list=1&json=01")
-        .then(
-          res =>
-            (this.files =
-              typeof res.data == "object"
-                ? res.data
-                : eval("(" + res.data + ")") || []) //парсим текст в объект; //+++ UPD 10.6.2019: EVAL  OLD WAY -> 4LEGACY
-        )
-        .then(() => this.uploaded_list())
+        .get(`${this.url}?component=${this.component}&get_list=1&json_test`)
+        .then( res => {
+          this.files = res.data
+          // this.files = typeof res.data == "object" ? res.data : eval("(" + res.data + ")") || [])
+         } ) //парсим текст в объект; //+++ UPD 10.6.2019: EVAL  OLD WAY -> 4LEGACY
+        .then(() => this.get_uploaded_list())
         .catch(e => {
-          console.info("catch->", e);
-          //that.status = 0;
-          //that.msg = "Ошибка при проверке уже загруженных документов. Проверьте соединение.";
-          //that.showAlert(); //that.alertColor = "danger";
+          console.info("catch->", e); 
           if (e.response.status === 401)
             this.showAlert("Необходимо повторно авторизироваться. ");
           else
-            this.showAlert(
-              "Ошибка при проверке уже загруженных документов. Проверьте соединение."
-            );
+            this.showAlert( "Ошибка при проверке уже загруженных документов. Проверьте соединение." );
         })
-        .finally(() => this.$nextTick(() => (this.loading = 0)));
+        .finally(() => this.loading = false);
     },
-    uploaded_list() {
-      let group = 0;
-      axios
-        .get(
-          this.url +
-            "?component=" +
-            this.component +
-            "&action=get_uploaded_list&EntID=" +
-            this.EntID
-        )
-        .then(res => {
-          //console.log('ОТВЕТ2',res.data);
-
-          if (res.data && res.data.msg != null) {
-            const confirmPosition =
-              (res.data && res.data.confirm && res.data.confirm.split(",")) ||
-              [];
-            const reloadPosition =
-              (res.data && res.data.reloaded && res.data.reloaded.split(",")) ||
-              [];
-
-            this.confirm = [];
+    get_uploaded_list() { 
+      const cb = data => { 
+            const confirmPosition = data.confirm.split(",") 
+            const reloadPosition =  data.reloaded.split(",")
+            this.confirm = [];  
             this.reloaded = [];
-
-            const uploadedDocs = res.data.msg && res.data.msg.split(",");
-            uploadedDocs.forEach((e, i) => {
-              confirmPosition[i] == 1 ? this.confirm.push(e) : "";
-              reloadPosition[i] == 1 ? this.reloaded.push(e) : "";
-
+            const uploadedDocs = data.msg.split(",");
+            const files = this.files
+            uploadedDocs.forEach( (e, i) => {
+              if(confirmPosition[i] == 1) this.confirm.push(e)
+              if(reloadPosition[i] == 1) this.reloaded.push(e)
               try {
-                this.files["id" + e].loaded = 1;
-              } catch (err) {
-                if (group == 0) {
-                }
-                group = 1;
-                //this.showAlert('Ошибка. Проверьте соединение.')
-                //  console.info("=>File loaded ERRR => ","=>uploadedDocs:",uploadedDocs,"\n","=>e:",e,"\n","=>this.files:",this.files,"\n","=>this:",this,"\n","=>err:",err);
-              } //console.log('that.files["id"+e]=>',that.files["id"+e])
+                  files.filter(obj => obj.id == e)[0].loaded = 1
+               } catch(e) { }// try {  this.files["id" + e].loaded = 1; } catch (err) { // this.showAlert("Ошибка при парсинге ответа сервера. Подробности: " + err.message) 
             });
           }
-        })
-        .catch(e => {
-          this.showAlert("Ошибка. Проверьте соединение. Подробности: " + e);
-        });
-      if (group != 0) {
-        /*console.groupEnd();*/
-      }
+    const uploaded = localStorage.getItem('uploaded_docs')
+    if(uploaded) return cb(JSON.parse(uploaded))
+    axios
+      .get(`${this.url}?component=${this.component}&action=get_uploaded_list&EntID=${this.EntID}`)
+      .then(({data}) => {
+        localStorage.setItem('uploaded_docs', JSON.stringify(data))
+        cb(data)
+      })
+      .catch(err => this.showAlert("Ошибка. Проверьте соединение. Подробности: " + err.message) );
     },
 
     uploadedHandler(e, ee) {
@@ -323,7 +235,7 @@ export default {
     }
   },
   mounted() {
-    this.listView(); /*грузит все доки .!.*/
+    //this.listView(); /*грузит все доки при открытии .!.*/
   }
 };
 </script>

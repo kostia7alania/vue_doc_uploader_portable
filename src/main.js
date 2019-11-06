@@ -1,11 +1,8 @@
 //import Vue from 'vue';
 import App from "./App.vue";
 import "./styles.css";
-
 window.EventBus = new Vue();
-
 Vue.config.devtools = true
-
 window.newVue = (sel, component, readonly = 1, url, formats, EntID, candelete = 0, docs4postUpload = "", disabledDocIds = "", isCapitan = 0, iconsPath = process.env.NODE_ENV !== 'production' ? "./src/icons/" : './js/uploader/portable/icons/') => {
   new Vue({
     el: sel,

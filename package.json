@@ -1,7 +1,7 @@
 {
-  "name": "cryptopro-pdf-sign-in-browser-with-vuejs",
-  "description": "КриптоПро ЭЦП Browser plug-in предназначен для создания и проверки электронной подписи (ЭП) на веб-страницах с использованием СКЗИ \"КриптоПро CSP\"",
-  "version": "1.0.0",
+  "name": "doc-uploader",
+  "description": "Just doc uploader",
+  "version": "1.0.1",
   "author": "Kostia7ALANia <osetia-alania@mail.ru>",
   "license": "MIT",
   "private": true,
